@@ -189,9 +189,25 @@ def fetch(url: str, timeout: int = 20) -> str:
         return body.decode(charset, errors="replace")
 
 
+def dump(url: str) -> None:
+    """Print JSON-LD en prijs/kleur-achtige meta van een pagina, om een winkel te debuggen."""
+    html = fetch(url)
+    p = _PageParser()
+    p.feed(html)
+    print(f"== {url}  ({len(html)} tekens, {len(p.jsonld)} JSON-LD-blokken)")
+    for i, raw in enumerate(p.jsonld):
+        print(f"-- JSON-LD {i}:")
+        print(raw.strip()[:8000])
+    print("-- meta:", {k: v for k, v in p.meta.items() if any(w in k for w in ("price", "color", "colour", "sku", "title"))})
+    for m in sorted(set(re.findall(r"(?i)(vanill\w*|black[^\"<]{0,30}|zwart[^\"<]{0,30})", html)))[:40]:
+        print("   kleurtekst:", m)
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--only", help="alleen deze winkel-id")
+    ap.add_argument("--dump", action="store_true", help="toon de JSON-LD van de pagina (debug)")
     args = ap.parse_args()
 
     cfg = json.loads(CONFIG.read_text())
@@ -202,6 +218,11 @@ def main() -> int:
 
     ok = 0
     for shop in cfg["shops"]:
+        if args.only and shop["id"] != args.only:
+            continue
+        if args.dump:
+            dump(shop["url"])
+            continue
         try:
             price, avail, how = extract(fetch(shop["url"]), sku)
         except (urllib.error.URLError, TimeoutError, OSError) as e:
