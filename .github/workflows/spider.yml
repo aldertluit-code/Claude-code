@@ -22,8 +22,10 @@ jobs:
         with:
           python-version: "3.12"
       - name: Debug één winkel
-        if: ${{ inputs.debug_shop != '' }}
-        run: python3 spider/spider.py --only "${{ inputs.debug_shop }}" --dump
+        if: ${{ inputs.debug_shop }}
+        env:
+          SHOP: ${{ inputs.debug_shop }}
+        run: python3 spider/spider.py --only "$SHOP" --dump
       - name: Prijzen ophalen
         if: ${{ !inputs.debug_shop }}
         run: python3 spider/spider.py
