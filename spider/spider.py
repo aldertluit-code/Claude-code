@@ -100,7 +100,7 @@ def extract(html: str, sku: str | None = None) -> tuple[float | None, bool | Non
     p = _PageParser()
     p.feed(html)
 
-    offers, types_seen = [], set()
+    products, loose_offers, types_seen = [], [], set()
     for raw in p.jsonld:
         try:
             data = json.loads(raw.strip())
@@ -108,12 +108,25 @@ def extract(html: str, sku: str | None = None) -> tuple[float | None, bool | Non
             continue
         for node in _walk(data):
             t = node.get("@type")
-            for tt in (t if isinstance(t, list) else [t]):
-                if isinstance(tt, str):
-                    types_seen.add(tt)
             types = t if isinstance(t, list) else [t]
-            if "Offer" in types or "AggregateOffer" in types:
-                offers.append(node)
+            types_seen.update(x for x in types if isinstance(x, str))
+            if "Product" in types or "ProductGroup" in types:
+                products.append(node)
+            elif ("Offer" in types or "AggregateOffer" in types) and not products:
+                loose_offers.append(node)
+
+    def matches(prod) -> bool:
+        blob = " ".join(str(prod.get(k, "")) for k in ("sku", "mpn", "productID", "name", "model")).lower()
+        blob += " " + json.dumps(prod.get("hasVariant", ""))[:5000].lower()
+        return bool((sku and sku.lower() in blob) or re.search(r"xt[\s-]?6(?!\d)", blob))
+
+    # Alleen offers van het juiste product, niet van "ook bekeken"-blokken.
+    chosen = [pr for pr in products if matches(pr)]
+    product_name = chosen[0].get("name", "?") if chosen else None
+    offers = [n for pr in chosen for n in _walk(pr)
+              if isinstance(n, dict) and n.get("@type") in ("Offer", "AggregateOffer")]
+    if not products:
+        offers = loose_offers
 
     def collect(only_sku: bool):
         prices, stock = [], []
@@ -135,7 +148,7 @@ def extract(html: str, sku: str | None = None) -> tuple[float | None, bool | Non
     if not prices:
         prices, stock = collect(False)
     if prices:
-        return min(prices), any(stock), "json-ld"
+        return min(prices), any(stock), f"json-ld: {product_name or 'losse offers'}"
 
     # Fallback: Open Graph / product-meta / microdata
     for key in ("product:price:amount", "og:price:amount", "itemprop:price", "price"):
@@ -145,7 +158,7 @@ def extract(html: str, sku: str | None = None) -> tuple[float | None, bool | Non
             return _to_float(p.meta[key]), ("instock" in avail or "in stock" in avail), key
 
     price_keys = sorted(k for k in p.meta if "price" in k)
-    why = (f"{len(p.jsonld)} JSON-LD-blok(ken), types={sorted(types_seen) or '-'}, "
+    why = (f"{len(p.jsonld)} JSON-LD-blok(ken), {len(products)} product(en), types={sorted(types_seen) or '-'}, "
            f"prijs-meta={price_keys or '-'}, html={len(html)} tekens")
     return None, None, why
 
