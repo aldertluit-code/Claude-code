@@ -8,11 +8,61 @@
     "category": "Sneakers laag · Unisex"
   },
   "shops": [
-    {"id": "zalando",        "name": "Zalando",          "country": "NL", "shipping": 0,    "url": "https://www.zalando.nl/salomon-xt-6-unisex-sneakers-laag-blackphantom-sa515o001-q11.html"},
-    {"id": "sneakerdistrict","name": "Sneaker District", "country": "NL", "shipping": 0,    "url": "https://www.sneakerdistrict.nl/salomon-unisex-xt-6-black-black-phantom"},
-    {"id": "footlocker",     "name": "Foot Locker",      "country": "NL", "shipping": null, "url": "https://www.footlocker.nl/nl/category/collection/salomon/xt-6.html"},
-    {"id": "asphaltgold",    "name": "Asphaltgold",      "country": "DE", "shipping": null, "url": "https://www.asphaltgold.com/en/products/salomon-xt-6-black-black-phantom"},
-    {"id": "wearstore",      "name": "Wear Store",       "country": "BE", "shipping": null, "url": "https://wear-store.be/products/xt-6-sneaker-women-black-black-phantom"},
-    {"id": "hhv",            "name": "HHV",              "country": "DE", "shipping": null, "url": "https://www.hhv.de/en/clothing/item/salomon-xt-6-black-black-phantom-882004"}
+    {
+      "id": "zalando",
+      "name": "Zalando",
+      "country": "NL",
+      "shipping": 0,
+      "url": "https://www.zalando.nl/salomon-xt-6-unisex-sneakers-laag-blackphantom-sa515o001-q11.html"
+    },
+    {
+      "id": "sneakerdistrict",
+      "name": "Sneaker District",
+      "country": "NL",
+      "shipping": 0,
+      "url": "https://www.sneakerdistrict.nl/salomon-unisex-xt-6-black-black-phantom"
+    },
+    {
+      "id": "footlocker",
+      "name": "Foot Locker",
+      "country": "NL",
+      "shipping": null,
+      "url": "https://www.footlocker.nl/nl/product/~/315215911702.html"
+    },
+    {
+      "id": "asphaltgold",
+      "name": "Asphaltgold",
+      "country": "DE",
+      "shipping": null,
+      "url": "https://www.asphaltgold.com/en/products/salomon-xt-6-black-black-phantom"
+    },
+    {
+      "id": "hhv",
+      "name": "HHV",
+      "country": "DE",
+      "shipping": null,
+      "url": "https://www.hhv.de/en/clothing/item/salomon-xt-6-black-black-phantom-882004"
+    },
+    {
+      "id": "footpatrol",
+      "name": "Footpatrol",
+      "country": "NL",
+      "shipping": 0,
+      "url": "https://www.footpatrol.com/en-nl/products/375378"
+    },
+    {
+      "id": "mbcy",
+      "name": "MBCY",
+      "country": "NL",
+      "shipping": 0,
+      "url": "https://www.mbcy.com/en-nl/p/salomon-xt-6-zwart-71201"
+    },
+    {
+      "id": "ultimate",
+      "name": "Ultimate Sneaker Store",
+      "country": "BE",
+      "shipping": null,
+      "url": "https://www.ultimatesneakerstore.be/salomon-xt-6-3"
+    }
   ]
 }

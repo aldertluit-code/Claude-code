@@ -32,7 +32,11 @@ OUTPUT = ROOT / "docs" / "prices.json"
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
                   "(KHTML, like Gecko) Chrome/130.0 Safari/537.36 Prijsradar/1.0",
-    "Accept": "text/html,application/xhtml+xml",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Upgrade-Insecure-Requests": "1",
     "Accept-Language": "nl-NL,nl;q=0.9,en;q=0.8",
     "Accept-Encoding": "gzip",
 }
@@ -56,6 +60,8 @@ class _PageParser(HTMLParser):
             key = a.get("property") or a.get("name") or a.get("itemprop")
             if key and a.get("content"):
                 self.meta.setdefault(key.lower(), a["content"])
+        elif a.get("itemprop") in ("price", "availability") and (a.get("content") or a.get("href")):
+            self.meta.setdefault("itemprop:" + a["itemprop"], a.get("content") or a.get("href"))
 
     def handle_data(self, data):
         if self._in_ld:
@@ -89,12 +95,12 @@ def _to_float(value) -> float | None:
     return float(m.group()) if m else None
 
 
-def extract(html: str, sku: str | None = None) -> tuple[float | None, bool | None]:
-    """Geeft (laagste prijs in EUR, op voorraad) terug."""
+def extract(html: str, sku: str | None = None) -> tuple[float | None, bool | None, str]:
+    """Geeft (laagste prijs in EUR, op voorraad, uitleg) terug."""
     p = _PageParser()
     p.feed(html)
 
-    offers = []
+    offers, types_seen = [], set()
     for raw in p.jsonld:
         try:
             data = json.loads(raw.strip())
@@ -102,32 +108,62 @@ def extract(html: str, sku: str | None = None) -> tuple[float | None, bool | Non
             continue
         for node in _walk(data):
             t = node.get("@type")
+            for tt in (t if isinstance(t, list) else [t]):
+                if isinstance(tt, str):
+                    types_seen.add(tt)
             types = t if isinstance(t, list) else [t]
             if "Offer" in types or "AggregateOffer" in types:
                 offers.append(node)
 
-    prices, stock = [], []
-    for o in offers:
-        cur = (o.get("priceCurrency") or "EUR").upper()
-        if cur != "EUR":
-            continue
-        if sku and o.get("sku") and sku.lower() not in str(o["sku"]).lower():
-            continue
-        price = _to_float(o.get("price") or o.get("lowPrice"))
-        if price:
-            prices.append(price)
-            avail = str(o.get("availability", ""))
-            stock.append("InStock" in avail or "LimitedAvailability" in avail)
+    def collect(only_sku: bool):
+        prices, stock = [], []
+        for o in offers:
+            cur = (o.get("priceCurrency") or "EUR").upper()
+            if cur != "EUR":
+                continue
+            if only_sku and sku and sku.lower() not in str(o.get("sku", "")).lower():
+                continue
+            price = _to_float(o.get("price") or o.get("lowPrice"))
+            if price:
+                prices.append(price)
+                avail = str(o.get("availability", ""))
+                stock.append("InStock" in avail or "LimitedAvailability" in avail)
+        return prices, stock
 
+    # Eerst offers met ons artikelnummer; zet de winkel EAN's als SKU, dan alle offers.
+    prices, stock = collect(True)
+    if not prices:
+        prices, stock = collect(False)
     if prices:
-        return min(prices), any(stock)
+        return min(prices), any(stock), "json-ld"
 
-    # Fallback: Open Graph / product-meta
-    for key in ("product:price:amount", "og:price:amount", "price"):
-        if key in p.meta:
-            avail = p.meta.get("product:availability", "").lower()
-            return _to_float(p.meta[key]), ("instock" in avail or "in stock" in avail) or None
-    return None, None
+    # Fallback: Open Graph / product-meta / microdata
+    for key in ("product:price:amount", "og:price:amount", "itemprop:price", "price"):
+        if key in p.meta and _to_float(p.meta[key]):
+            avail = (p.meta.get("product:availability", "") + p.meta.get("og:availability", "")
+                     + p.meta.get("itemprop:availability", "")).lower()
+            return _to_float(p.meta[key]), ("instock" in avail or "in stock" in avail), key
+
+    price_keys = sorted(k for k in p.meta if "price" in k)
+    why = (f"{len(p.jsonld)} JSON-LD-blok(ken), types={sorted(types_seen) or '-'}, "
+           f"prijs-meta={price_keys or '-'}, html={len(html)} tekens")
+    return None, None, why
+
+
+def shopify(url: str) -> tuple[float | None, bool | None]:
+    """Shopify-winkels geven productdata als JSON op <product-url>.js."""
+    if "/products/" not in url:
+        return None, None
+    try:
+        data = json.loads(fetch(url.split("?")[0].rstrip("/") + ".js"))
+    except (urllib.error.URLError, TimeoutError, OSError, json.JSONDecodeError):
+        return None, None
+    variants = data.get("variants") or []
+    live = [v["price"] for v in variants if v.get("available")]
+    cents = min(live) if live else data.get("price")
+    if not cents:
+        return None, None
+    return cents / 100, bool(live)
 
 
 def fetch(url: str, timeout: int = 20) -> str:
@@ -154,15 +190,18 @@ def main() -> int:
     ok = 0
     for shop in cfg["shops"]:
         try:
-            price, avail = extract(fetch(shop["url"]), sku)
+            price, avail, how = extract(fetch(shop["url"]), sku)
         except (urllib.error.URLError, TimeoutError, OSError) as e:
-            print(f"  {shop['name']:<18} fout: {e}", file=sys.stderr)
-            continue
+            price, avail, how = None, None, f"fout: {e}"
         if price is None:
-            print(f"  {shop['name']:<18} geen prijs gevonden (layout of bot-blokkade?)", file=sys.stderr)
+            sp, sa = shopify(shop["url"])
+            if sp is not None:
+                price, avail, how = sp, sa, "shopify"
+        if price is None:
+            print(f"  {shop['name']:<18} geen prijs ({how})")
             continue
         ok += 1
-        print(f"  {shop['name']:<18} € {price:>7.2f}  {'op voorraad' if avail else 'uitverkocht/onbekend'}")
+        print(f"  {shop['name']:<18} € {price:>7.2f}  {'op voorraad' if avail else 'uitverkocht/onbekend'}  [{how}]")
         # Eén meting per winkel per dag: vervang een eerdere van vandaag.
         out["history"] = [h for h in out["history"]
                           if not (h["date"] == today and h["shop"] == shop["id"])]
@@ -172,7 +211,7 @@ def main() -> int:
 
     out["history"].sort(key=lambda h: (h["date"], h["shop"]))
     out["updated"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes")
-    if not args.dry_run:
+    if not args.dry_run and ok:
         OUTPUT.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
     print(f"{ok}/{len(cfg['shops'])} winkels bijgewerkt")
     return 0 if ok else 1
