@@ -5,7 +5,10 @@
     "name": "XT-6",
     "colour": "Black / Black / Phantom",
     "sku": "L41086600",
-    "category": "Sneakers laag · Unisex"
+    "category": "Sneakers laag · Unisex",
+    "colour_keywords": [
+      "phantom"
+    ]
   },
   "shops": [
     {
@@ -79,13 +82,6 @@
       "price": 179.0,
       "available": true,
       "source": "search-index"
-    },
-    {
-      "date": "2026-11-15",
-      "shop": "footlocker",
-      "price": 120.0,
-      "available": true,
-      "source": "spider"
     },
     {
       "date": "2026-11-15",

@@ -95,7 +95,8 @@ def _to_float(value) -> float | None:
     return float(m.group()) if m else None
 
 
-def extract(html: str, sku: str | None = None) -> tuple[float | None, bool | None, str]:
+def extract(html: str, sku: str | None = None,
+            colours: list[str] | None = None) -> tuple[float | None, bool | None, str]:
     """Geeft (laagste prijs in EUR, op voorraad, uitleg) terug."""
     p = _PageParser()
     p.feed(html)
@@ -122,6 +123,16 @@ def extract(html: str, sku: str | None = None) -> tuple[float | None, bool | Non
 
     # Alleen offers van het juiste product, niet van "ook bekeken"-blokken.
     chosen = [pr for pr in products if matches(pr)]
+
+    # Winkels als Foot Locker zetten alle kleuren als los product op de pagina.
+    # Staat er een kleur bij, dan tellen alleen varianten in de gezochte kleur.
+    with_colour = [pr for pr in chosen if pr.get("color")]
+    if colours and with_colour:
+        chosen = [pr for pr in with_colour
+                  if any(c.lower() in str(pr["color"]).lower() for c in colours)]
+        if not chosen:
+            seen = sorted({str(pr["color"]) for pr in with_colour})
+            return None, None, f"geen variant in kleur {colours}; wel: {seen}"
     product_name = chosen[0].get("name", "?") if chosen else None
     offers = [n for pr in chosen for n in _walk(pr)
               if isinstance(n, dict) and n.get("@type") in ("Offer", "AggregateOffer")]
@@ -215,6 +226,7 @@ def main() -> int:
     out["product"], out["shops"] = cfg["product"], cfg["shops"]
     today = dt.date.today().isoformat()
     sku = cfg["product"].get("sku")
+    colours = cfg["product"].get("colour_keywords")
 
     ok = 0
     for shop in cfg["shops"]:
@@ -224,7 +236,7 @@ def main() -> int:
             dump(shop["url"])
             continue
         try:
-            price, avail, how = extract(fetch(shop["url"]), sku)
+            price, avail, how = extract(fetch(shop["url"]), sku, colours)
         except (urllib.error.URLError, TimeoutError, OSError) as e:
             price, avail, how = None, None, f"fout: {e}"
         if price is None:
@@ -247,6 +259,8 @@ def main() -> int:
     out["updated"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes")
     if not args.dry_run and ok:
         OUTPUT.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
+    if args.dump:
+        return 0
     print(f"{ok}/{len(cfg['shops'])} winkels bijgewerkt")
     return 0 if ok else 1
 
