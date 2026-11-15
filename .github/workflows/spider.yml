@@ -9,9 +9,14 @@ on:
         description: "Winkel-id om te debuggen (leeg = normale run)"
         required: false
         default: ""
+      test_alert:
+        description: "Stuur een testmelding van de prijsalert"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
+  issues: write
 
 jobs:
   crawl:
@@ -38,3 +43,8 @@ jobs:
           git add docs/prices.json
           git diff --cached --quiet || git commit -m "Prijzen bijgewerkt $(date -u +%F)"
           git push
+      - name: Prijsalert
+        if: ${{ !inputs.debug_shop }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 spider/alert.py ${{ inputs.test_alert && '--test' || '' }}

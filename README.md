@@ -25,3 +25,10 @@ die schema.org-productdata in de pagina zet. Sommige grote winkels (o.a. Zalando
 slaat zo'n winkel dan over en meldt dat in de log.
 
 De eerste metingen (14–15 nov 2026) komen uit zoekresultaten; daarna neemt de spider het over.
+
+## Prijsalert per mail
+
+Staat de schoen bij een winkel onder `alert_below` (nu € 150, in `spider/shops.json`) op voorraad, dan maakt
+`spider/alert.py` een issue met label `prijsalert` aan en noemt de eigenaar met @. GitHub mailt je daarover.
+Zakt de prijs daarna nog verder, dan komt er een reactie bij. Sluit het issue om de alert te resetten.
+Testen: Actions → Prijsradar spider → Run workflow → vink "Stuur een testmelding" aan.
