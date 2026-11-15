@@ -1,0 +1,182 @@
+#!/usr/bin/env python3
+"""Prijsradar-spider.
+
+Haalt voor elke winkel in shops.json de productpagina op, leest de prijs en
+voorraad uit schema.org JSON-LD (of uit og/product-meta-tags als fallback)
+en voegt per winkel één meting per dag toe aan docs/prices.json.
+
+Gebruik:
+    python3 spider/spider.py            # alle winkels
+    python3 spider/spider.py --dry-run  # alleen tonen, niets wegschrijven
+
+Alleen de standaardbibliotheek; geen pip install nodig.
+"""
+from __future__ import annotations
+
+import argparse
+import datetime as dt
+import gzip
+import json
+import re
+import sys
+import time
+import urllib.error
+import urllib.request
+from html.parser import HTMLParser
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+CONFIG = ROOT / "spider" / "shops.json"
+OUTPUT = ROOT / "docs" / "prices.json"
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+                  "(KHTML, like Gecko) Chrome/130.0 Safari/537.36 Prijsradar/1.0",
+    "Accept": "text/html,application/xhtml+xml",
+    "Accept-Language": "nl-NL,nl;q=0.9,en;q=0.8",
+    "Accept-Encoding": "gzip",
+}
+
+
+class _PageParser(HTMLParser):
+    """Verzamelt JSON-LD-blokken en relevante meta-tags."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.jsonld: list[str] = []
+        self.meta: dict[str, str] = {}
+        self._in_ld = False
+        self._buf: list[str] = []
+
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == "script" and (a.get("type") or "").lower() == "application/ld+json":
+            self._in_ld, self._buf = True, []
+        elif tag == "meta":
+            key = a.get("property") or a.get("name") or a.get("itemprop")
+            if key and a.get("content"):
+                self.meta.setdefault(key.lower(), a["content"])
+
+    def handle_data(self, data):
+        if self._in_ld:
+            self._buf.append(data)
+
+    def handle_endtag(self, tag):
+        if tag == "script" and self._in_ld:
+            self.jsonld.append("".join(self._buf))
+            self._in_ld = False
+
+
+def _walk(node):
+    if isinstance(node, dict):
+        yield node
+        for v in node.values():
+            yield from _walk(v)
+    elif isinstance(node, list):
+        for v in node:
+            yield from _walk(v)
+
+
+def _to_float(value) -> float | None:
+    if value is None:
+        return None
+    s = str(value).strip().replace("€", "").replace(" ", "")
+    if "," in s and "." in s:          # 1.234,56
+        s = s.replace(".", "").replace(",", ".")
+    elif "," in s:                      # 174,95
+        s = s.replace(",", ".")
+    m = re.search(r"\d+(\.\d+)?", s)
+    return float(m.group()) if m else None
+
+
+def extract(html: str, sku: str | None = None) -> tuple[float | None, bool | None]:
+    """Geeft (laagste prijs in EUR, op voorraad) terug."""
+    p = _PageParser()
+    p.feed(html)
+
+    offers = []
+    for raw in p.jsonld:
+        try:
+            data = json.loads(raw.strip())
+        except json.JSONDecodeError:
+            continue
+        for node in _walk(data):
+            t = node.get("@type")
+            types = t if isinstance(t, list) else [t]
+            if "Offer" in types or "AggregateOffer" in types:
+                offers.append(node)
+
+    prices, stock = [], []
+    for o in offers:
+        cur = (o.get("priceCurrency") or "EUR").upper()
+        if cur != "EUR":
+            continue
+        if sku and o.get("sku") and sku.lower() not in str(o["sku"]).lower():
+            continue
+        price = _to_float(o.get("price") or o.get("lowPrice"))
+        if price:
+            prices.append(price)
+            avail = str(o.get("availability", ""))
+            stock.append("InStock" in avail or "LimitedAvailability" in avail)
+
+    if prices:
+        return min(prices), any(stock)
+
+    # Fallback: Open Graph / product-meta
+    for key in ("product:price:amount", "og:price:amount", "price"):
+        if key in p.meta:
+            avail = p.meta.get("product:availability", "").lower()
+            return _to_float(p.meta[key]), ("instock" in avail or "in stock" in avail) or None
+    return None, None
+
+
+def fetch(url: str, timeout: int = 20) -> str:
+    req = urllib.request.Request(url, headers=HEADERS)
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        body = r.read()
+        if r.headers.get("Content-Encoding") == "gzip":
+            body = gzip.decompress(body)
+        charset = r.headers.get_content_charset() or "utf-8"
+        return body.decode(charset, errors="replace")
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dry-run", action="store_true")
+    args = ap.parse_args()
+
+    cfg = json.loads(CONFIG.read_text())
+    out = json.loads(OUTPUT.read_text()) if OUTPUT.exists() else {"history": []}
+    out["product"], out["shops"] = cfg["product"], cfg["shops"]
+    today = dt.date.today().isoformat()
+    sku = cfg["product"].get("sku")
+
+    ok = 0
+    for shop in cfg["shops"]:
+        try:
+            price, avail = extract(fetch(shop["url"]), sku)
+        except (urllib.error.URLError, TimeoutError, OSError) as e:
+            print(f"  {shop['name']:<18} fout: {e}", file=sys.stderr)
+            continue
+        if price is None:
+            print(f"  {shop['name']:<18} geen prijs gevonden (layout of bot-blokkade?)", file=sys.stderr)
+            continue
+        ok += 1
+        print(f"  {shop['name']:<18} € {price:>7.2f}  {'op voorraad' if avail else 'uitverkocht/onbekend'}")
+        # Eén meting per winkel per dag: vervang een eerdere van vandaag.
+        out["history"] = [h for h in out["history"]
+                          if not (h["date"] == today and h["shop"] == shop["id"])]
+        out["history"].append({"date": today, "shop": shop["id"], "price": price,
+                               "available": bool(avail), "source": "spider"})
+        time.sleep(1.5)  # netjes blijven tegenover de winkels
+
+    out["history"].sort(key=lambda h: (h["date"], h["shop"]))
+    out["updated"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes")
+    if not args.dry_run:
+        OUTPUT.write_text(json.dumps(out, indent=2, ensure_ascii=False) + "\n")
+    print(f"{ok}/{len(cfg['shops'])} winkels bijgewerkt")
+    return 0 if ok else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

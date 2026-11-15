@@ -1,0 +1,448 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prijsradar Salomon XT-6</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: pricewatch-indeling — productkop met laagste prijs, daaronder tabbladen Prijzen / Prijshistorie / Specificaties. */
+:root {
+  --bg: #f3f4f7;
+  --surface: #ffffff;
+  --fg: #171a22;
+  --muted: #5d6475;
+  --line: #dfe2ea;
+  --accent: #2b50e0;
+  --accent-soft: #e6ebff;
+  --good: #137a4a;
+  --good-soft: #e1f4ea;
+  --bad: #a33a2a;
+  --bad-soft: #fbe7e3;
+  --shoe-1: #20232b;
+  --shoe-2: #7d8494;
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11131a; --surface: #191c25; --fg: #e8eaf0; --muted: #9aa1b3; --line: #2b2f3c;
+    --accent: #8ea4ff; --accent-soft: #232b4d; --good: #5fd39a; --good-soft: #173527;
+    --bad: #f0907f; --bad-soft: #3a1f1b; --shoe-1: #c9cdd8; --shoe-2: #6b7284; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11131a; --surface: #191c25; --fg: #e8eaf0; --muted: #9aa1b3; --line: #2b2f3c;
+  --accent: #8ea4ff; --accent-soft: #232b4d; --good: #5fd39a; --good-soft: #173527;
+  --bad: #f0907f; --bad-soft: #3a1f1b; --shoe-1: #c9cdd8; --shoe-2: #6b7284; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+
+.wrap { max-width: 1040px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+.topbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; align-items: center; gap: 16px; padding-block: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 19px; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+.brand svg { width: 22px; height: 22px; }
+.crumbs { color: var(--muted); font-size: 13px; }
+.crumbs span + span::before { content: "›"; margin: 0 6px; }
+
+main.wrap { padding-block: 24px 48px; display: grid; gap: 20px; }
+
+.hero { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; display: grid; grid-template-columns: 260px 1fr 280px; gap: 24px; padding: 20px; align-items: center; }
+.shoe { background: var(--bg); border-radius: 8px; aspect-ratio: 4 / 3; max-width: 100%; display: grid; place-items: center; }
+.shoe svg { width: 88%; height: auto; }
+.title { min-width: 0; }
+.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: 30px; line-height: 1.1; margin: 4px 0 8px; text-wrap: balance; letter-spacing: -0.015em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--muted); font-size: 13px; }
+.meta b { color: var(--fg); font-weight: 600; }
+
+.best { border-left: 1px solid var(--line); padding-left: 24px; display: grid; gap: 10px; }
+.best .label { font-size: 13px; color: var(--muted); }
+.best .price { font-family: var(--font-display); font-weight: 800; font-size: 38px; line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.best .at { font-size: 14px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: var(--accent); color: var(--surface); text-decoration: none; font-weight: 600; font-size: 14px; padding: 9px 14px; border-radius: 6px; border: 0; cursor: pointer; font-family: inherit; }
+td .btn { white-space: nowrap; }
+.btn:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+.spread { font-size: 13px; color: var(--muted); }
+
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tabs a { font-family: var(--font-display); font-weight: 700; font-size: 15px; padding: 10px 14px; color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.tabs a[aria-current="page"] { color: var(--fg); border-bottom-color: var(--accent); }
+.tabs a .count { font-family: var(--font-data); font-weight: 500; font-size: 12px; background: var(--accent-soft); color: var(--accent); border-radius: 10px; padding: 1px 7px; margin-left: 4px; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.toolbar label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.toolbar select, .toolbar input[type="number"] { font: inherit; font-size: 14px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--fg); }
+.toolbar .grow { flex: 1; }
+.alert-box { display: inline-flex; align-items: center; gap: 6px; }
+.alert-box input { width: 96px; }
+
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; padding: 10px 16px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 14px 16px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+tr:last-child td { border-bottom: 0; }
+th.r, td.r { text-align: right; }
+.shopname { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.cc { font-family: var(--font-data); font-size: 11px; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; }
+.sub { font-size: 12px; color: var(--muted); }
+.pill { display: inline-block; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 10px; white-space: nowrap; }
+.pill.in { background: var(--good-soft); color: var(--good); }
+.pill.out { background: var(--bad-soft); color: var(--bad); }
+.pill.low { background: var(--accent-soft); color: var(--accent); }
+.pill.target { background: var(--good-soft); color: var(--good); }
+td.price { font-family: var(--font-display); font-weight: 700; font-size: 18px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr.is-out td.price, tr.is-out .shopname { color: var(--muted); }
+tr.is-best { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+.empty { padding: 28px 16px; text-align: center; color: var(--muted); }
+
+.chart-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 20px; padding: 16px 16px 0; }
+.chart-head h2, .specs h2 { font-family: var(--font-display); font-size: 18px; margin: 0; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+.chart { padding: 8px 8px 0; }
+.chart svg { width: 100%; height: auto; display: block; }
+.chart text { fill: var(--muted); font-family: var(--font-data); font-size: 11px; }
+.note { font-size: 13px; color: var(--muted); padding: 12px 16px 16px; max-width: 70ch; }
+
+.specs { padding: 16px; display: grid; gap: 12px; }
+dl { display: grid; grid-template-columns: minmax(140px, 220px) 1fr; margin: 0; font-size: 14px; }
+dt, dd { padding: 9px 0; border-bottom: 1px solid var(--line); margin: 0; }
+dt { color: var(--muted); padding-right: 16px; }
+
+footer { color: var(--muted); font-size: 12px; line-height: 1.6; }
+
+@media (max-width: 820px) {
+  .hero { grid-template-columns: 1fr; }
+  .shoe { max-width: 320px; }
+  .best { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 16px; }
+  h1 { font-size: 26px; }
+}
+@media (max-width: 560px) {
+  .col-ship, .col-stock-h { display: none; }
+  td, th { padding-left: 12px; padding-right: 12px; }
+  dl { grid-template-columns: 1fr; }
+  td .btn { padding: 7px 10px; font-size: 13px; }
+  dt { border-bottom: 0; padding-bottom: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn, .tabs a { transition: filter .15s, color .15s, border-color .15s; }
+}
+</style>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="var(--accent)" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="none" stroke="var(--accent)" stroke-width="2"/><path d="M12 12 L20 6" stroke="var(--fg)" stroke-width="2" stroke-linecap="round"/></svg>
+      Prijsradar
+    </div>
+    <nav class="crumbs" aria-label="Kruimelpad"><span>Kleding &amp; schoenen</span><span>Sneakers</span><span>Salomon</span></nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" aria-labelledby="prod-title">
+    <div class="shoe" aria-hidden="true">
+      <svg viewBox="0 0 320 200">
+        <path d="M22 150 C20 128 40 118 64 110 L118 92 C134 70 146 54 168 48 C186 44 200 52 210 64 L236 92 C262 100 292 112 300 132 C304 142 300 152 290 154 L36 160 C28 160 22 156 22 150 Z" fill="var(--shoe-1)"/>
+        <path d="M18 152 L302 140 C304 152 300 166 286 168 L40 174 C26 174 18 166 18 152 Z" fill="var(--shoe-2)"/>
+        <path d="M70 112 L150 140 M100 100 L170 132 M128 82 L196 124 M152 60 L222 114" stroke="var(--shoe-2)" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path d="M176 50 L214 92" stroke="var(--bg)" stroke-width="3" stroke-dasharray="2 7" stroke-linecap="round" fill="none"/>
+        <circle cx="206" cy="58" r="5" fill="var(--shoe-2)"/>
+      </svg>
+    </div>
+    <div class="title">
+      <div class="eyebrow" id="cat">Sneakers laag · Unisex</div>
+      <h1 id="prod-title">Salomon XT-6</h1>
+      <div class="meta">
+        <span>Kleur <b id="colour">Black / Black / Phantom</b></span>
+        <span>Artikelnr. <b class="num" id="sku">L41086600</b></span>
+        <span id="shopcount">6 winkels</span>
+      </div>
+    </div>
+    <aside class="best" aria-label="Laagste prijs">
+      <div class="label">Laagste prijs</div>
+      <div class="price" id="best-price">…</div>
+      <div class="at" id="best-shop">&nbsp;</div>
+      <a class="btn" id="best-link" href="#" target="_blank" rel="noopener">Bekijk aanbieding</a>
+      <div class="spread" id="spread">&nbsp;</div>
+    </aside>
+  </section>
+
+  <nav class="tabs" aria-label="Onderdelen">
+    <a href="#prijzen" data-tab="prijzen">Prijzen <span class="count" id="tab-count">6</span></a>
+    <a href="#historie" data-tab="historie">Prijshistorie</a>
+    <a href="#specs" data-tab="specs">Specificaties</a>
+  </nav>
+
+  <section class="panel" id="view-prijzen">
+    <div class="toolbar">
+      <label><input type="checkbox" id="f-stock" checked> Alleen op voorraad</label>
+      <label><input type="checkbox" id="f-nl"> Alleen Nederlandse winkels</label>
+      <label>Sorteer
+        <select id="f-sort">
+          <option value="price">Prijs, laag naar hoog</option>
+          <option value="name">Winkel, A–Z</option>
+        </select>
+      </label>
+      <span class="grow"></span>
+      <span class="alert-box">
+        <label for="f-target">Mijn doelprijs €</label>
+        <input type="number" id="f-target" min="0" step="1" inputmode="decimal" placeholder="170">
+      </span>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Winkel</th>
+            <th class="col-stock-h">Voorraad</th>
+            <th class="col-ship">Verzendkosten</th>
+            <th class="r">Prijs</th>
+            <th class="r" aria-label="Link"></th>
+          </tr>
+        </thead>
+        <tbody id="rows"><tr><td colspan="5" class="empty">Prijzen laden…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="view-historie" hidden>
+    <div class="chart-head">
+      <h2>Laagste prijs per dag</h2>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="chart" id="chart"></div>
+    <p class="note" id="chart-note"></p>
+  </section>
+
+  <section class="panel specs" id="view-specs" hidden>
+    <h2>Specificaties</h2>
+    <dl>
+      <dt>Merk</dt><dd>Salomon (Sportstyle-lijn)</dd>
+      <dt>Model</dt><dd>XT-6</dd>
+      <dt>Kleur</dt><dd>Black / Black / Phantom</dd>
+      <dt>Artikelnummer</dt><dd class="num">L41086600</dd>
+      <dt>Zalando-artikel</dt><dd class="num">SA515O001-Q11</dd>
+      <dt>Doelgroep</dt><dd>Unisex</dd>
+      <dt>Type</dt><dd>Sneaker laag, afgeleid van een trailrunschoen</dd>
+      <dt>Sluiting</dt><dd>Quicklace snelvetersysteem</dd>
+      <dt>Bovenwerk</dt><dd>Textiel mesh met synthetische overlays (SensiFit)</dd>
+      <dt>Stabiliteit</dt><dd>Agile Chassis System</dd>
+      <dt>Tussenzool</dt><dd>EnergyCell+</dd>
+      <dt>Loopzool</dt><dd>Contagrip-rubber</dd>
+      <dt>Pasvorm</dt><dd>Winkels geven tegenstrijdig advies (normale maat of een halve maat groter). Check de maattabel van de winkel.</dd>
+    </dl>
+  </section>
+
+  <footer id="footer">
+    Prijsradar is een zelfgebouwde prijsvergelijker. Prijzen zijn inclusief btw en kunnen afwijken van de actuele prijs in de winkel.
+  </footer>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const eur = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR" });
+  const dfmt = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "short" });
+  const dlong = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+  const COLORS = ["#2b50e0", "#d9822b", "#2a9d8f", "#b5179e", "#6c757d", "#8a6d3b"];
+  let data = null;
+
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+
+  function latestPerShop() {
+    const byShop = new Map();
+    for (const h of data.history) {
+      const cur = byShop.get(h.shop);
+      if (!cur || h.date >= cur.date) byShop.set(h.shop, h);
+    }
+    return data.shops.map((s) => ({ ...s, obs: byShop.get(s.id) || null }));
+  }
+
+  function renderHero(list) {
+    const live = list.filter((s) => s.obs && s.obs.available);
+    $("shopcount").textContent = `${list.length} winkels · ${live.length} op voorraad`;
+    $("tab-count").textContent = live.length;
+    if (!live.length) { $("best-price").textContent = "–"; $("best-shop").textContent = "Nergens op voorraad"; return; }
+    live.sort((a, b) => a.obs.price - b.obs.price);
+    const best = live[0], worst = live[live.length - 1];
+    $("best-price").textContent = eur.format(best.obs.price);
+    $("best-shop").innerHTML = `bij <b></b>`;
+    $("best-shop").querySelector("b").textContent = best.name;
+    $("best-link").href = best.url;
+    const diff = worst.obs.price - best.obs.price;
+    $("spread").textContent = diff > 0
+      ? `Tot ${eur.format(diff)} goedkoper dan de duurste winkel`
+      : "Alle winkels rekenen dezelfde prijs";
+  }
+
+  function renderRows(list) {
+    const onlyStock = $("f-stock").checked;
+    const onlyNL = $("f-nl").checked;
+    const sort = $("f-sort").value;
+    const target = parseFloat($("f-target").value);
+    const live = list.filter((s) => s.obs && s.obs.available).map((s) => s.obs.price);
+    const min = live.length ? Math.min(...live) : null;
+
+    let rows = list.filter((s) => s.obs)
+      .filter((s) => !onlyStock || s.obs.available)
+      .filter((s) => !onlyNL || s.country === "NL");
+    rows.sort(sort === "name"
+      ? (a, b) => a.name.localeCompare(b.name, "nl")
+      : (a, b) => (b.obs.available - a.obs.available) || (a.obs.price - b.obs.price));
+
+    const tb = $("rows");
+    tb.textContent = "";
+    if (!rows.length) {
+      tb.innerHTML = `<tr><td colspan="5" class="empty">Geen winkels voor deze filters. Zet een filter uit om meer te zien.</td></tr>`;
+      return;
+    }
+    for (const s of rows) {
+      const o = s.obs;
+      const isBest = o.available && o.price === min;
+      const hitsTarget = o.available && !isNaN(target) && o.price <= target;
+      const tr = document.createElement("tr");
+      if (!o.available) tr.className = "is-out";
+      if (isBest) tr.classList.add("is-best");
+      const ship = s.shipping === 0 ? "Gratis" : s.shipping == null ? "Zie winkel" : eur.format(s.shipping);
+      tr.innerHTML = `
+        <td>
+          <div class="shopname"><span class="n"></span><span class="cc"></span></div>
+          <div class="sub">Gemeten ${dfmt.format(new Date(o.date))}</div>
+        </td>
+        <td class="col-stock-h"><span class="pill ${o.available ? "in" : "out"}">${o.available ? "Op voorraad" : "Uitverkocht"}</span></td>
+        <td class="col-ship">${ship}</td>
+        <td class="r price">${eur.format(o.price)}
+          ${isBest ? '<div><span class="pill low">Laagste</span></div>' : ""}
+          ${hitsTarget ? '<div><span class="pill target">Onder doelprijs</span></div>' : ""}
+        </td>
+        <td class="r"><a class="btn ${isBest ? "" : "ghost"}" target="_blank" rel="noopener">Naar winkel</a></td>`;
+      tr.querySelector(".n").textContent = s.name;
+      tr.querySelector(".cc").textContent = s.country;
+      tr.querySelector("a").href = s.url;
+      tb.appendChild(tr);
+    }
+  }
+
+  function renderChart() {
+    const W = 960, H = 300, P = { l: 64, r: 20, t: 16, b: 34 };
+    const dates = [...new Set(data.history.map((h) => h.date))].sort();
+    const shopIdx = new Map(data.shops.map((s, i) => [s.id, i]));
+    const pts = data.history.filter((h) => h.available);
+    if (!pts.length) { $("chart").innerHTML = '<p class="empty">Nog geen metingen.</p>'; return; }
+
+    // Lijn: laagste beschikbare prijs per dag. Per winkel telt de meest
+    // recente meting tot en met die dag, zodat een gemiste dag geen gat geeft.
+    const lowest = dates.map((d) => {
+      const last = new Map();
+      for (const h of data.history) if (h.date <= d) {
+        const cur = last.get(h.shop);
+        if (!cur || h.date >= cur.date) last.set(h.shop, h);
+      }
+      const day = [...last.values()].filter((h) => h.available).map((h) => h.price);
+      return day.length ? { d, p: Math.min(...day) } : null;
+    }).filter(Boolean);
+
+    const prices = pts.map((h) => h.price);
+    let lo = Math.floor((Math.min(...prices) - 5) / 5) * 5;
+    let hi = Math.ceil((Math.max(...prices) + 5) / 5) * 5;
+    const t0 = new Date(dates[0]).getTime();
+    // Toon minstens 30 dagen as, zodat een korte historie niet uitgerekt wordt.
+    const t1 = Math.max(new Date(dates[dates.length - 1]).getTime(), t0 + 29 * 864e5);
+    const x = (d) => P.l + ((new Date(d).getTime() - t0) / (t1 - t0)) * (W - P.l - P.r);
+    const y = (p) => P.t + (1 - (p - lo) / (hi - lo)) * (H - P.t - P.b);
+
+    let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Prijsverloop van de laagste prijs per dag">`;
+    const step = (hi - lo) / 5 >= 5 ? Math.ceil((hi - lo) / 5 / 5) * 5 : 5;
+    for (let v = lo; v <= hi; v += step) {
+      svg += `<line x1="${P.l}" x2="${W - P.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/>`;
+      svg += `<text x="${P.l - 8}" y="${y(v) + 4}" text-anchor="end">€ ${v}</text>`;
+    }
+    for (let i = 0; i <= 4; i++) {
+      const t = new Date(t0 + (i / 4) * (t1 - t0));
+      svg += `<text x="${x(t)}" y="${H - 10}" text-anchor="${i === 0 ? "start" : i === 4 ? "end" : "middle"}">${dfmt.format(t)}</text>`;
+    }
+    if (lowest.length > 1) {
+      const line = lowest.map((q, i) => `${i ? "L" : "M"}${x(q.d).toFixed(1)},${y(q.p).toFixed(1)}`).join(" ");
+      const area = `${line} L${x(lowest[lowest.length - 1].d).toFixed(1)},${H - P.b} L${x(lowest[0].d).toFixed(1)},${H - P.b} Z`;
+      svg += `<path d="${area}" fill="var(--accent-soft)" opacity="0.7"/>`;
+      svg += `<path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>`;
+    }
+    for (const h of pts) {
+      const c = COLORS[shopIdx.get(h.shop) % COLORS.length];
+      const shop = data.shops[shopIdx.get(h.shop)];
+      svg += `<circle cx="${x(h.date)}" cy="${y(h.price)}" r="4.5" fill="${c}" stroke="var(--surface)" stroke-width="1.5"><title>${shop.name}: ${eur.format(h.price)} (${dfmt.format(new Date(h.date))})</title></circle>`;
+    }
+    const last = lowest[lowest.length - 1];
+    svg += `<circle cx="${x(last.d)}" cy="${y(last.p)}" r="7" fill="none" stroke="var(--accent)" stroke-width="2"/>`;
+    svg += `</svg>`;
+    $("chart").innerHTML = svg;
+
+    $("legend").innerHTML = data.shops.map((s, i) =>
+      `<span><i style="background:${COLORS[i % COLORS.length]}"></i>${s.name.replace(/</g, "&lt;")}</span>`).join("");
+
+    $("chart-note").textContent = dates.length < 7
+      ? `Metingen vanaf ${dlong.format(new Date(dates[0]))}. De spider voegt elke dag een meting per winkel toe, dus deze grafiek groeit vanzelf.`
+      : `${dates.length} meetdagen, van ${dlong.format(new Date(dates[0]))} tot ${dlong.format(new Date(dates[dates.length - 1]))}.`;
+  }
+
+  function renderFooter() {
+    const dates = data.history.map((h) => h.date).sort();
+    const sources = new Set(data.history.map((h) => h.source));
+    const how = sources.has("spider") ? "opgehaald door de Prijsradar-spider" : "verzameld uit zoekresultaten (de spider neemt het daarna over)";
+    $("footer").textContent = `Prijsradar is een zelfgebouwde prijsvergelijker. Laatste meting ${dlong.format(new Date(dates[dates.length - 1]))}, ${how}. Prijzen zijn inclusief btw en kunnen afwijken van de actuele prijs in de winkel.`;
+  }
+
+  function showTab() {
+    const tab = ["prijzen", "historie", "specs"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "prijzen";
+    for (const a of document.querySelectorAll(".tabs a")) {
+      if (a.dataset.tab === tab) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+    }
+    $("view-prijzen").hidden = tab !== "prijzen";
+    $("view-historie").hidden = tab !== "historie";
+    $("view-specs").hidden = tab !== "specs";
+  }
+
+  function rerender() { renderRows(latestPerShop()); }
+
+  for (const id of ["f-stock", "f-nl", "f-sort", "f-target"]) {
+    const el = $(id);
+    const saved = store.get("pr-" + id);
+    if (saved !== null) { if (el.type === "checkbox") el.checked = saved === "1"; else el.value = saved; }
+    el.addEventListener("input", () => {
+      store.set("pr-" + id, el.type === "checkbox" ? (el.checked ? "1" : "0") : el.value);
+      rerender();
+    });
+  }
+  window.addEventListener("hashchange", showTab);
+  showTab();
+
+  fetch("prices.json", { cache: "no-store" })
+    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then((json) => {
+      data = json;
+      const list = latestPerShop();
+      renderHero(list);
+      renderRows(list);
+      renderChart();
+      renderFooter();
+    })
+    .catch(() => {
+      $("rows").innerHTML = '<tr><td colspan="5" class="empty">De prijslijst (prices.json) kon niet worden geladen. Draai de spider of open de pagina via een webserver.</td></tr>';
+    });
+})();
+</script>
