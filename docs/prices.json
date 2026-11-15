@@ -85,6 +85,13 @@
     },
     {
       "date": "2026-11-15",
+      "shop": "footlocker",
+      "price": 179.99,
+      "available": true,
+      "source": "spider"
+    },
+    {
+      "date": "2026-11-15",
       "shop": "footpatrol",
       "price": 180.0,
       "available": true,
@@ -126,5 +133,5 @@
       "source": "spider"
     }
   ],
-  "updated": "2026-11-15T09:04+00:00"
+  "updated": "2026-11-15T09:14+00:00"
 }
