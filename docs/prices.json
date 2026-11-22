@@ -307,7 +307,42 @@
       "price": 174.95,
       "available": true,
       "source": "spider"
+    },
+    {
+      "date": "2026-11-22",
+      "shop": "asphaltgold",
+      "price": 161.0,
+      "available": true,
+      "source": "spider"
+    },
+    {
+      "date": "2026-11-22",
+      "shop": "footlocker",
+      "price": 179.99,
+      "available": true,
+      "source": "spider"
+    },
+    {
+      "date": "2026-11-22",
+      "shop": "sneakerdistrict",
+      "price": 180.0,
+      "available": true,
+      "source": "spider"
+    },
+    {
+      "date": "2026-11-22",
+      "shop": "ultimate",
+      "price": 179.95,
+      "available": true,
+      "source": "spider"
+    },
+    {
+      "date": "2026-11-22",
+      "shop": "zalando",
+      "price": 174.95,
+      "available": true,
+      "source": "spider"
     }
   ],
-  "updated": "2026-11-21T06:11+00:00"
+  "updated": "2026-11-22T06:12+00:00"
 }
