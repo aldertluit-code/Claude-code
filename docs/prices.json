@@ -363,7 +363,28 @@
       "price": 174.95,
       "available": true,
       "source": "spider"
+    },
+    {
+      "date": "2026-11-24",
+      "shop": "sneakerdistrict",
+      "price": 180.0,
+      "available": true,
+      "source": "spider"
+    },
+    {
+      "date": "2026-11-24",
+      "shop": "ultimate",
+      "price": 179.95,
+      "available": true,
+      "source": "spider"
+    },
+    {
+      "date": "2026-11-24",
+      "shop": "zalando",
+      "price": 174.95,
+      "available": true,
+      "source": "spider"
     }
   ],
-  "updated": "2026-11-23T06:25+00:00"
+  "updated": "2026-11-24T06:14+00:00"
 }
