@@ -1,9 +1,35 @@
 {
 "entries": {
 "KA17887": {
-"amounts": {},
-"checked": null,
-"second": {}
+"amounts": {
+"2024": 2775.0,
+"2025": 2125.0,
+"2026": 2125.0
+},
+"checked": "2026-11-26",
+"hybrid_hint": true,
+"kw": 4.0,
+"second": {
+"2026": 900.0
+},
+"title": "KA17887 Atlantic AUREA 5 R32 HYBRID ADD-ON",
+"type": "Lucht-Water",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka17887-atlantic-aurea-5-r32-hybrid-add"
+},
+"KA22154": {
+"amounts": {
+"2024": 2400.0,
+"2025": 1925.0,
+"2026": 1925.0
+},
+"checked": "2026-11-26",
+"kw": 4.0,
+"second": {
+"2026": 900.0
+},
+"title": "KA22154 Intergas Xtend 5",
+"type": "Lucht-Water",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka22154-intergas-xtend-5"
 }
 },
 "listed": "2026-11-26"

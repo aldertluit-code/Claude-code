@@ -15,10 +15,12 @@
    "incl_install": false,
    "shop": "warmtebeheer",
    "shop_name": "Warmtebeheer",
-   "meldcode": null,
+   "meldcode": "KA22154",
    "subsidy": 1925.0,
    "subsidy_year": "2026",
-   "subsidy_source": "schatting (geen meldcode gevonden)",
+   "subsidy_source": "RVO, gekoppeld op modelnaam",
+   "rvo_url": "https://www.rvo.nl/meldcodes-warmtepompen/ka22154-intergas-xtend-5",
+   "rvo_title": "KA22154 Intergas Xtend 5",
    "net": 724.0,
    "first_seen": "2026-11-26",
    "last_seen": "2026-11-26"
@@ -38,10 +40,12 @@
    "incl_install": false,
    "shop": "warmtebeheer",
    "shop_name": "Warmtebeheer",
-   "meldcode": null,
+   "meldcode": "KA22154",
    "subsidy": 1925.0,
    "subsidy_year": "2026",
-   "subsidy_source": "schatting (geen meldcode gevonden)",
+   "subsidy_source": "RVO, gekoppeld op modelnaam",
+   "rvo_url": "https://www.rvo.nl/meldcodes-warmtepompen/ka22154-intergas-xtend-5",
+   "rvo_title": "KA22154 Intergas Xtend 5",
    "net": 724.0,
    "first_seen": "2026-11-26",
    "last_seen": "2026-11-26"
@@ -224,11 +228,13 @@
    "incl_install": false,
    "shop": "eek",
    "shop_name": "Eek Installatietechniek",
-   "meldcode": null,
-   "subsidy": 1925.0,
+   "meldcode": "KA17887",
+   "subsidy": 2125.0,
    "subsidy_year": "2026",
-   "subsidy_source": "schatting (geen meldcode gevonden)",
-   "net": 2065.0,
+   "subsidy_source": "RVO, gekoppeld op modelnaam",
+   "rvo_url": "https://www.rvo.nl/meldcodes-warmtepompen/ka17887-atlantic-aurea-5-r32-hybrid-add",
+   "rvo_title": "KA17887 Atlantic AUREA 5 R32 HYBRID ADD-ON",
+   "net": 1865.0,
    "first_seen": "2026-11-26",
    "last_seen": "2026-11-26"
   }
@@ -295,7 +301,7 @@
    "available": true
   }
  ],
- "updated": "2026-11-26T12:47+00:00",
+ "updated": "2026-11-26T12:54+00:00",
  "boiler": {
   "name": "Intergas Xtreme CW5",
   "protocol": "OpenTherm",
@@ -320,12 +326,6 @@
  "subsidy_year": "2026",
  "shops": [
   {
-   "id": "warmteservice",
-   "name": "Warmteservice",
-   "base": "https://www.warmteservice.nl",
-   "includes_installation": null
-  },
-  {
    "id": "cvtotaal",
    "name": "CV Totaal",
    "base": "https://www.cvtotaal.nl",
@@ -341,12 +341,6 @@
    "id": "warmtebeheer",
    "name": "Warmtebeheer",
    "base": "https://www.warmtebeheer.nl",
-   "includes_installation": null
-  },
-  {
-   "id": "newheating",
-   "name": "New Heating",
-   "base": "https://www.new-heating.com",
    "includes_installation": null
   },
   {
