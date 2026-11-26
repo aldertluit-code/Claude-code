@@ -205,11 +205,13 @@
    "incl_install": false,
    "shop": "cvtotaal",
    "shop_name": "CV Totaal",
-   "meldcode": null,
-   "subsidy": 1925.0,
+   "meldcode": "KA17887",
+   "subsidy": 2125.0,
    "subsidy_year": "2026",
-   "subsidy_source": "schatting (geen meldcode gevonden)",
-   "net": -975.0,
+   "subsidy_source": "meldcode op productpagina",
+   "rvo_url": "https://www.rvo.nl/meldcodes-warmtepompen/ka17887-atlantic-aurea-5-r32-hybrid-add",
+   "rvo_title": "KA17887 Atlantic AUREA 5 R32 HYBRID ADD-ON",
+   "net": -1175.0,
    "first_seen": "2026-11-26",
    "last_seen": "2026-11-26"
   },
@@ -301,7 +303,7 @@
    "available": true
   }
  ],
- "updated": "2026-11-26T12:54+00:00",
+ "updated": "2026-11-26T13:01+00:00",
  "boiler": {
   "name": "Intergas Xtreme CW5",
   "protocol": "OpenTherm",

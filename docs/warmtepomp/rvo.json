@@ -1,5 +1,12 @@
 {
 "entries": {
+"KA13951": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA13951 ATAG Energion M Hybrid zone 5",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka13951-atag-energion-m-hybrid-zone-5"
+},
 "KA17887": {
 "amounts": {
 "2024": 2775.0,
@@ -16,6 +23,24 @@
 "type": "Lucht-Water",
 "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka17887-atlantic-aurea-5-r32-hybrid-add"
 },
+"KA20994": {
+"amounts": {
+"2026": 1925
+},
+"checked": null,
+"second": {},
+"title": "KA20994 Itho Daalderop Vincent V45-Hybride",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka20994-itho-daalderop-vincent-v45-hybride"
+},
+"KA21789": {
+"amounts": {
+"2026": 2125
+},
+"checked": null,
+"second": {},
+"title": "KA21789 Quatt Hybrid 6kW",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka21789-quatt-quatt-hybrid-6kw"
+},
 "KA22154": {
 "amounts": {
 "2024": 2400.0,
@@ -30,6 +55,99 @@
 "title": "KA22154 Intergas Xtend 5",
 "type": "Lucht-Water",
 "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka22154-intergas-xtend-5"
+},
+"KA22881": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA22881 ATAG Energion S Hybrid 50",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka22881-atag-atag-energion-s-hybrid-50"
+},
+"KA25415": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA25415 WeHeat Blackbird P80",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka25415-weheat-blackbird-p80"
+},
+"KA25888": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA25888 Alpha Innotec Hybrox 5",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka25888-alpha-innotec-hybrox-5"
+},
+"KA25889": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA25889 Alpha Innotec Hybrox 8",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka25889-alpha-innotec-hybrox-8"
+},
+"KA27434": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA27434 Intergas Xtend 5 Mono FT",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka27434-intergas-xtend-5-mono-ft"
+},
+"KA28188": {
+"amounts": {
+"2026": 4150
+},
+"checked": null,
+"second": {},
+"title": "KA28188 Alpha Innotec Hybrox 16",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka28188-alpha-innotec-hybrox-16"
+},
+"KA28196": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA28196 WeHeat Blackbird P60",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka28196-weheat-blackbird-p60"
+},
+"KA28646": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA28646 Alpha Innotec Hybrox 11",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka28646-alpha-innotec-hybrox-11"
+},
+"KA31212": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA31212 Intergas Xtend ECO 5",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka31212-intergas-xtend-eco-5"
+},
+"KA32026": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA32026 Intergas Xtend ECO 7",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka32026-intergas-xtend-eco-7"
+},
+"KA32628": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA32628 Alpha Innotec Hybrox SE 11",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka32628-alpha-innotec-hybrox-se-11"
+},
+"KA32630": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA32630 Alpha Innotec Hybrox SE 5",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka32630-alpha-innotec-hybrox-se-5"
+},
+"KA32631": {
+"amounts": {},
+"checked": null,
+"second": {},
+"title": "KA32631 Alpha Innotec Hybrox SE 8",
+"url": "https://www.rvo.nl/meldcodes-warmtepompen/ka32631-alpha-innotec-hybrox-se-8"
 }
 },
 "listed": "2026-11-26"
