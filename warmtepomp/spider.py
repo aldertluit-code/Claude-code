@@ -477,7 +477,8 @@ def rvo_refresh_index(rvo: dict, cfg: dict, log) -> None:
         except NET_ERRORS as e:
             log(f"  ! RVO {page}: {e}")
             continue
-        xlsx = [(h, l) for h, l, _ in parse(html).links if re.search(r"\.xlsx?(\?|$)", h.lower())]
+        xlsx = [(h, l) for h, l, _ in parse(html).links
+                if re.search(r"\.xlsx?(\?|$)", h.lower()) and "warmtepomp" in (h + l).lower()]
         log(f"  RVO {page}: Excel-links {[h.rsplit('/', 1)[-1] for h, _ in xlsx][:8]}")
         # de meldcodelijst eerst; het aanvraagformulier voor fabrikanten overslaan
         xlsx.sort(key=lambda hl: "meldcode" not in (hl[0] + hl[1]).lower())
@@ -683,6 +684,22 @@ def subsidy_for(p: dict, rvo: dict, cfg: dict, year: str, log, allow_fetch: bool
         if a:
             p.update(meldcode=code, subsidy=a, subsidy_year=y, subsidy_source="meldcode op productpagina",
                      rvo_url=(e or {}).get("url"), rvo_title=(e or {}).get("title"))
+            return
+    # Gecontroleerde meldcodes uit config.json (RVO laadt de lijst zelf met JavaScript).
+    for m in cfg.get("meldcodes", []):
+        if m["code"] in tried or not re.search(m["match"], p["name"].lower()):
+            continue
+        e = rvo["entries"].setdefault(m["code"], {"amounts": {}, "second": {}, "checked": None})
+        e.setdefault("url", m["url"])
+        e.setdefault("title", f"{m['code']} {m['title']}")
+        for y, a in m.get("amounts", {}).items():
+            e["amounts"].setdefault(y, a)
+        e = (rvo_detail(m["code"], rvo, cfg, log) if allow_fetch else e) or e
+        a, y = amount_of(e)
+        tried.append(m["code"])
+        if a:
+            p.update(meldcode=m["code"], subsidy=a, subsidy_year=y, subsidy_source="RVO, gekoppeld op modelnaam",
+                     rvo_url=e.get("url"), rvo_title=e.get("title"))
             return
     for score, code in rvo_match(p["name"], p["_rule"], p["kw"], rvo):
         if code in tried:

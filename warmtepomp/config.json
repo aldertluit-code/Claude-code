@@ -102,17 +102,6 @@
   ],
   "shops": [
     {
-      "id": "warmteservice",
-      "name": "Warmteservice",
-      "platform": "html",
-      "base": "https://www.warmteservice.nl",
-      "start": [
-        "https://www.warmteservice.nl/Duurzaam/Warmtepomp/Hybride-lucht-water-warmtepomp/Atlantic-Aurea-5-Hybrid-Add-On-warmtepomp-(monoblock)-5-kW/p/03150305",
-        "https://www.warmteservice.nl/search?text=hybride+warmtepomp",
-        "https://www.warmteservice.nl/Atlantic/Duurzaam/Warmtepomp/Hybride-lucht-water-warmtepomp/c/11165-atlantic"
-      ]
-    },
-    {
       "id": "cvtotaal",
       "name": "CV Totaal",
       "platform": "html",
@@ -141,17 +130,6 @@
         "https://www.warmtebeheer.nl/catalogsearch/result/?q=hybrid"
       ],
       "max_pages": 160
-    },
-    {
-      "id": "newheating",
-      "name": "New Heating",
-      "platform": "html",
-      "base": "https://www.new-heating.com",
-      "start": [
-        "https://www.new-heating.com/en/products/atlantic-aurea-hybrid-5kw-add-on-warmtepomp-met-control-box-en-anna-thermostaat",
-        "https://www.new-heating.com/en/atlantic-aurea-hybrid-add-on-heat-pump-with-contro.html",
-        "https://www.new-heating.com/en/alpha-innotec-hybrox-8-air-water-monoblock-heat-pu.html"
-      ]
     },
     {
       "id": "coolblue",
@@ -309,5 +287,145 @@
       "source": null,
       "always_hybrid": false
     }
-  ]
+  ],
+  "meldcodes": [
+    {
+      "code": "KA17887",
+      "match": "aurea",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka17887-atlantic-aurea-5-r32-hybrid-add",
+      "title": "Atlantic AUREA 5 R32 HYBRID ADD-ON",
+      "amounts": {
+        "2026": 2125
+      },
+      "note": "RVO-pagina gecontroleerd 5 feb 2026; subsidiabel vermogen 4 kW"
+    },
+    {
+      "code": "KA22154",
+      "match": "xtend(?!.*(eco|mono)).*\\b5\\s*(kw)?\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka22154-intergas-xtend-5",
+      "title": "Intergas Xtend 5",
+      "amounts": {
+        "2025": 1925
+      }
+    },
+    {
+      "code": "KA27434",
+      "match": "xtend.*mono.*\\b5\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka27434-intergas-xtend-5-mono-ft",
+      "title": "Intergas Xtend 5 Mono FT",
+      "amounts": {}
+    },
+    {
+      "code": "KA31212",
+      "match": "xtend.*eco.*\\b5\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka31212-intergas-xtend-eco-5",
+      "title": "Intergas Xtend ECO 5",
+      "amounts": {}
+    },
+    {
+      "code": "KA32026",
+      "match": "xtend.*eco.*\\b7\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka32026-intergas-xtend-eco-7",
+      "title": "Intergas Xtend ECO 7",
+      "amounts": {}
+    },
+    {
+      "code": "KA21789",
+      "match": "quatt.*hybrid",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka21789-quatt-quatt-hybrid-6kw",
+      "title": "Quatt Hybrid 6kW",
+      "amounts": {
+        "2026": 2125
+      }
+    },
+    {
+      "code": "KA20994",
+      "match": "vincent.*v45",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka20994-itho-daalderop-vincent-v45-hybride",
+      "title": "Itho Daalderop Vincent V45-Hybride",
+      "amounts": {
+        "2026": 1925
+      }
+    },
+    {
+      "code": "KA25888",
+      "match": "hybrox(?!.*se)\\D*\\b5\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka25888-alpha-innotec-hybrox-5",
+      "title": "Alpha Innotec Hybrox 5",
+      "amounts": {}
+    },
+    {
+      "code": "KA25889",
+      "match": "hybrox(?!.*se)\\D*\\b8\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka25889-alpha-innotec-hybrox-8",
+      "title": "Alpha Innotec Hybrox 8",
+      "amounts": {}
+    },
+    {
+      "code": "KA28646",
+      "match": "hybrox(?!.*se)\\D*\\b11\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka28646-alpha-innotec-hybrox-11",
+      "title": "Alpha Innotec Hybrox 11",
+      "amounts": {}
+    },
+    {
+      "code": "KA28188",
+      "match": "hybrox(?!.*se)\\D*\\b16\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka28188-alpha-innotec-hybrox-16",
+      "title": "Alpha Innotec Hybrox 16",
+      "amounts": {
+        "2026": 4150
+      }
+    },
+    {
+      "code": "KA32630",
+      "match": "hybrox.*se\\D*\\b5\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka32630-alpha-innotec-hybrox-se-5",
+      "title": "Alpha Innotec Hybrox SE 5",
+      "amounts": {}
+    },
+    {
+      "code": "KA32631",
+      "match": "hybrox.*se\\D*\\b8\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka32631-alpha-innotec-hybrox-se-8",
+      "title": "Alpha Innotec Hybrox SE 8",
+      "amounts": {}
+    },
+    {
+      "code": "KA32628",
+      "match": "hybrox.*se\\D*\\b11\\b",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka32628-alpha-innotec-hybrox-se-11",
+      "title": "Alpha Innotec Hybrox SE 11",
+      "amounts": {}
+    },
+    {
+      "code": "KA22881",
+      "match": "energion\\s*s\\s*hybrid",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka22881-atag-atag-energion-s-hybrid-50",
+      "title": "ATAG Energion S Hybrid 50",
+      "amounts": {}
+    },
+    {
+      "code": "KA13951",
+      "match": "energion\\s*m\\s*hybrid",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka13951-atag-energion-m-hybrid-zone-5",
+      "title": "ATAG Energion M Hybrid zone 5",
+      "amounts": {}
+    },
+    {
+      "code": "KA25415",
+      "match": "blackbird.*p\\s?80",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka25415-weheat-blackbird-p80",
+      "title": "WeHeat Blackbird P80",
+      "amounts": {}
+    },
+    {
+      "code": "KA28196",
+      "match": "blackbird.*p\\s?60",
+      "url": "https://www.rvo.nl/meldcodes-warmtepompen/ka28196-weheat-blackbird-p60",
+      "title": "WeHeat Blackbird P60",
+      "amounts": {}
+    }
+  ],
+  "blocked_shops_note": "Warmteservice en Technim blokkeren geautomatiseerd ophalen (HTTP 403); die worden bewust niet omzeild."
 }
