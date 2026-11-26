@@ -103,7 +103,38 @@
         "add-on"
       ],
       "start": [
-        "https://www.technim.nl/?s=hybride&post_type=product"
+        "https://www.technim.nl/?s=hybride&post_type=product",
+        "https://www.technim.nl/verwarming/warmtepomp/monoblock/atlantic-aurea-hybrid-add-on-warmtepomp-met-controlbox-en-anna-thermostaat/"
+      ]
+    },
+    {
+      "id": "warmteservice",
+      "name": "Warmteservice",
+      "platform": "html",
+      "base": "https://www.warmteservice.nl",
+      "start": [
+        "https://www.warmteservice.nl/Duurzaam/Warmtepomp/Hybride-lucht-water-warmtepomp/Atlantic-Aurea-5-Hybrid-Add-On-warmtepomp-(monoblock)-5-kW/p/03150305",
+        "https://www.warmteservice.nl/search?text=hybride+warmtepomp",
+        "https://www.warmteservice.nl/Atlantic/Duurzaam/Warmtepomp/Hybride-lucht-water-warmtepomp/c/11165-atlantic"
+      ]
+    },
+    {
+      "id": "cvtotaal",
+      "name": "CV Totaal",
+      "platform": "html",
+      "base": "https://www.cvtotaal.nl",
+      "start": [
+        "https://www.cvtotaal.nl/atlantic-aurea-hybride-warmtepomp-add-on.html",
+        "https://www.cvtotaal.nl/catalogsearch/result/?q=hybride+warmtepomp"
+      ]
+    },
+    {
+      "id": "eek",
+      "name": "Eek Installatietechniek",
+      "platform": "html",
+      "base": "https://www.eekinstallatietechniek.nl",
+      "start": [
+        "https://www.eekinstallatietechniek.nl/contents/nl/p1701_Atlantic-Aurea-5-Hybrid-Add-On-warmtepomp-.html"
       ]
     },
     {
