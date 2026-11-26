@@ -38,10 +38,7 @@
     "warmtepomp",
     "heat pump",
     "heatpump",
-    "hybride",
-    "hybrid",
-    "buitenunit",
-    "monoblock"
+    "heat-pump"
   ],
   "exclude_words": [
     "beugel",
@@ -74,7 +71,20 @@
     "expansievat",
     "airco",
     "split airco",
-    "zwembad"
+    "zwembad",
+    "omvormer",
+    "inverter",
+    "verdeler",
+    "vloerverwarming",
+    "ltvc",
+    "all-in-one",
+    "avanta",
+    "tzerra",
+    "calenta",
+    "met cv-ketel",
+    "met combiketel",
+    "incl. cv-ketel",
+    "keteldeel"
   ],
   "install_words": [
     "incl. installatie",
@@ -91,22 +101,6 @@
     "standaard installatie"
   ],
   "shops": [
-    {
-      "id": "technim",
-      "name": "Technim",
-      "platform": "woocommerce",
-      "base": "https://www.technim.nl",
-      "queries": [
-        "hybride warmtepomp",
-        "hybride",
-        "hybrid",
-        "add-on"
-      ],
-      "start": [
-        "https://www.technim.nl/?s=hybride&post_type=product",
-        "https://www.technim.nl/verwarming/warmtepomp/monoblock/atlantic-aurea-hybrid-add-on-warmtepomp-met-controlbox-en-anna-thermostaat/"
-      ]
-    },
     {
       "id": "warmteservice",
       "name": "Warmteservice",
@@ -145,7 +139,8 @@
       "start": [
         "https://www.warmtebeheer.nl/catalogsearch/result/?q=hybride+warmtepomp",
         "https://www.warmtebeheer.nl/catalogsearch/result/?q=hybrid"
-      ]
+      ],
+      "max_pages": 160
     },
     {
       "id": "newheating",
@@ -153,28 +148,9 @@
       "platform": "html",
       "base": "https://www.new-heating.com",
       "start": [
-        "https://new-heating.com/en/atlantic-aurea-hybrid-add-on-heat-pump-c-156692688.html",
-        "https://www.new-heating.com/en/advanced_search_result.php?keywords=hybrid",
-        "https://www.new-heating.com/en/advanced_search_result.php?keywords=hybride"
-      ]
-    },
-    {
-      "id": "heattransformers",
-      "name": "Heat Transformers",
-      "platform": "html",
-      "base": "https://www.heattransformers.com",
-      "start": [
-        "https://www.heattransformers.com/warmtepompen"
-      ]
-    },
-    {
-      "id": "warmtethuis",
-      "name": "WarmteThuis",
-      "platform": "html",
-      "base": "https://www.warmtethuis.nl",
-      "includes_installation": true,
-      "start": [
-        "https://www.warmtethuis.nl/warmtepompen"
+        "https://www.new-heating.com/en/products/atlantic-aurea-hybrid-5kw-add-on-warmtepomp-met-control-box-en-anna-thermostaat",
+        "https://www.new-heating.com/en/atlantic-aurea-hybrid-add-on-heat-pump-with-contro.html",
+        "https://www.new-heating.com/en/alpha-innotec-hybrox-8-air-water-monoblock-heat-pu.html"
       ]
     },
     {
@@ -184,16 +160,7 @@
       "base": "https://www.coolblue.nl",
       "includes_installation": true,
       "start": [
-        "https://www.coolblue.nl/warmtepompen/hybride-warmtepompen"
-      ]
-    },
-    {
-      "id": "installand",
-      "name": "Installand",
-      "platform": "html",
-      "base": "https://www.installand.nl",
-      "start": [
-        "https://www.installand.nl/catalogsearch/result/?q=hybride+warmtepomp"
+        "https://www.coolblue.nl/warmtepompen"
       ]
     }
   ],

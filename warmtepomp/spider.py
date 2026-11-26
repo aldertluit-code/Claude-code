@@ -477,8 +477,13 @@ def rvo_refresh_index(rvo: dict, cfg: dict, log) -> None:
         except NET_ERRORS as e:
             log(f"  ! RVO {page}: {e}")
             continue
-        for href, label, _ in parse(html).links:
-            if not re.search(r"\.xlsx?(\?|$)", href.lower()) or "warmtepomp" not in (href + label).lower():
+        xlsx = [(h, l) for h, l, _ in parse(html).links if re.search(r"\.xlsx?(\?|$)", h.lower())]
+        log(f"  RVO {page}: Excel-links {[h.rsplit('/', 1)[-1] for h, _ in xlsx][:8]}")
+        # de meldcodelijst eerst; het aanvraagformulier voor fabrikanten overslaan
+        xlsx.sort(key=lambda hl: "meldcode" not in (hl[0] + hl[1]).lower())
+        got = {}
+        for href, label in xlsx:
+            if "aanvraag" in (href + label).lower():
                 continue
             url = urllib.parse.urljoin(final, href)
             try:
@@ -491,6 +496,9 @@ def rvo_refresh_index(rvo: dict, cfg: dict, log) -> None:
                 cur = rvo["entries"].setdefault(code, {})
                 cur.update({k: v for k, v in e.items() if v})
                 cur.setdefault("checked", None)
+            if got:
+                break
+        if got:
             break
     # 2) De HTML-lijst met paginering, voor de links naar de detailpagina's
     base = cfg["rvo"]["list_pages"][0]
@@ -503,9 +511,15 @@ def rvo_refresh_index(rvo: dict, cfg: dict, log) -> None:
             log(f"  ! RVO-lijst pagina {n}: {e}")
             break
         new = 0
-        for href, label, _ in parse(html).links:
-            m = re.search(r"/meldcodes-warmtepompen/(ka\d{5})[^\"'?#]*", href.lower())
-            if not m:
+        pg = parse(html)
+        links = pg.links + [(h, "", "") for h in re.findall(r'href="([^"]*ka\d{5}[^"]*)"', html, re.I)]
+        if n == 0:   # diagnose in de log, voor als RVO de opmaak verandert
+            hits = [h for h, _, _ in links if re.search(r"ka\d{5}|meldcode", h.lower())]
+            log(f"  RVO-lijst: titel {pg.title.strip()[:60]!r}, {len(pg.links)} links, "
+                f"{len(set(MELDCODE.findall(html)))} KA-codes in de HTML, voorbeelden {hits[:6]}")
+        for href, label, _ in links:
+            m = re.search(r"(ka\d{5})", href.lower())
+            if not m or "meldcode" not in href.lower():
                 continue
             code = m.group(1).upper()
             e = rvo["entries"].setdefault(code, {"amounts": {}, "second": {}, "checked": None})
@@ -745,6 +759,9 @@ def main() -> int:
             # een product dat zowel op de lijst- als de productpagina staat: productpagina wint
             if pid in found and not c.get("text"):
                 continue
+            if any(q["shop"] == shop["id"] and k != pid and q["name"].lower() == p["name"].lower()
+                   and q["price"] == p["price"] for k, q in found.items()):
+                continue   # zelfde product via een andere URL
             p["shop"], p["shop_name"] = shop["id"], shop["name"]
             found[pid] = p
         log(f"    → {sum(1 for k in found if k.startswith(shop['id'] + ':'))} hybride warmtepompen")
@@ -764,7 +781,18 @@ def main() -> int:
         p.pop("_rule", None)
         p["net"] = round(p["price"] - p["subsidy"], 2) if p.get("subsidy") is not None else None
 
-    # 3. wegschrijven
+    # 3. wegschrijven. Een eerdere run van vandaag telt niet meer mee (anders blijven
+    #    producten hangen die de spider nu bewust overslaat).
+    today = TODAY.isoformat()
+    if found and not args.only:
+        stale = {k for k, p in data["products"].items() if p.get("last_seen") == today and k not in found}
+        for k in stale:
+            prev = [h["date"] for h in data["history"] if h["product"] == k and h["date"] < today]
+            if prev:
+                data["products"][k]["last_seen"] = max(prev)
+            else:
+                del data["products"][k]
+        data["history"] = [h for h in data["history"] if not (h["product"] in stale and h["date"] == today)]
     for pid, p in found.items():
         prev = data["products"].get(pid, {})
         p["first_seen"] = prev.get("first_seen", TODAY.isoformat())
