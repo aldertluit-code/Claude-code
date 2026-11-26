@@ -752,6 +752,13 @@ def main() -> int:
     year = str(cfg["settings"].get("subsidy_year") or TODAY.year)
     data = json.loads(DATA.read_text()) if DATA.exists() else {"products": {}, "history": []}
     rvo = load_rvo()
+    for m in cfg.get("meldcodes", []):   # gecontroleerde meldcodes: juiste RVO-link en bedrag als terugval
+        e = rvo["entries"].setdefault(m["code"], {"amounts": {}, "second": {}, "checked": None})
+        e.setdefault("url", m["url"])
+        e.setdefault("title", f"{m['code']} {m['title']}")
+        e.setdefault("amounts", {})
+        for y, a in m.get("amounts", {}).items():
+            e["amounts"].setdefault(y, a)
 
     # 1. winkels
     found: dict[str, dict] = {}
