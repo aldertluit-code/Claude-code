@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Warmtepompradar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root {
+  --bg: #f3f4f7; --surface: #ffffff; --fg: #171a22; --muted: #5d6475; --line: #dfe2ea;
+  --accent: #2b50e0; --accent-soft: #e6ebff;
+  --good: #137a4a; --good-soft: #e1f4ea; --warn: #8a5a00; --warn-soft: #fdf0d5; --bad: #a33a2a; --bad-soft: #fbe7e3;
+  --font-display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11131a; --surface: #191c25; --fg: #e8eaf0; --muted: #9aa1b3; --line: #2b2f3c;
+    --accent: #8ea4ff; --accent-soft: #232b4d; --good: #5fd39a; --good-soft: #173527;
+    --warn: #f2c46b; --warn-soft: #3a2f17; --bad: #f0907f; --bad-soft: #3a1f1b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11131a; --surface: #191c25; --fg: #e8eaf0; --muted: #9aa1b3; --line: #2b2f3c;
+  --accent: #8ea4ff; --accent-soft: #232b4d; --good: #5fd39a; --good-soft: #173527;
+  --warn: #f2c46b; --warn-soft: #3a2f17; --bad: #f0907f; --bad-soft: #3a1f1b; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.num { font-family: var(--font-data); font-variant-numeric: tabular-nums; }
+.wrap { max-width: 1100px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.topbar { background: var(--surface); border-bottom: 1px solid var(--line); }
+.topbar .wrap { display: flex; align-items: center; gap: 16px; padding-block: 12px; flex-wrap: wrap; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 19px; display: flex; align-items: center; gap: 8px; }
+.brand svg { width: 22px; height: 22px; }
+.crumbs { color: var(--muted); font-size: 13px; }
+.crumbs a { color: inherit; }
+main.wrap { padding-block: 24px 48px; display: grid; gap: 20px; }
+
+.hero { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 20px; display: grid; grid-template-columns: 1fr 300px; gap: 24px; align-items: center; }
+.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: 28px; line-height: 1.15; margin: 4px 0 8px; text-wrap: balance; }
+.lede { color: var(--muted); margin: 0; max-width: 62ch; }
+.best { border-left: 1px solid var(--line); padding-left: 24px; display: grid; gap: 6px; }
+.best .label { font-size: 13px; color: var(--muted); }
+.best .price { font-family: var(--font-display); font-weight: 800; font-size: 36px; line-height: 1; font-variant-numeric: tabular-nums; }
+.best .price.neg { color: var(--good); }
+.best .what { font-size: 14px; }
+.kpis { display: flex; gap: 8px 20px; flex-wrap: wrap; margin-top: 12px; font-size: 13px; color: var(--muted); }
+.kpis b { color: var(--fg); font-family: var(--font-data); font-weight: 500; }
+
+.notice { background: var(--warn-soft); color: var(--fg); border: 1px solid var(--line); border-left: 4px solid var(--warn); border-radius: 8px; padding: 12px 14px; font-size: 14px; }
+.notice b { color: var(--warn); }
+
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); overflow-x: auto; }
+.tabs a { font-family: var(--font-display); font-weight: 700; font-size: 15px; padding: 10px 14px; color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+.tabs a[aria-current="page"] { color: var(--fg); border-bottom-color: var(--accent); }
+.tabs .count { font-family: var(--font-data); font-weight: 500; font-size: 12px; background: var(--accent-soft); color: var(--accent); border-radius: 10px; padding: 1px 7px; margin-left: 4px; }
+
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.filters { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.filters label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.filters select, .filters input[type=number] { font: inherit; font-size: 14px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--fg); }
+.filters input[type=number] { width: 90px; }
+.filters .spacer { flex: 1; }
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; background: var(--bg); }
+td.r, th.r { text-align: right; }
+tr:last-child td { border-bottom: 0; }
+.model { font-weight: 600; }
+.sub { font-size: 13px; color: var(--muted); }
+.sub a { color: inherit; }
+.money { font-family: var(--font-data); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.net { font-family: var(--font-display); font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.net.neg { color: var(--good); }
+.pill { display: inline-block; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+.pill.ja { background: var(--good-soft); color: var(--good); }
+.pill.opentherm { background: var(--accent-soft); color: var(--accent); }
+.pill.controleren, .pill.onbekend { background: var(--warn-soft); color: var(--warn); }
+.pill.nee { background: var(--bad-soft); color: var(--bad); }
+.pill.est { background: var(--bg); color: var(--muted); border: 1px dashed var(--line); }
+.btn { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: var(--surface); text-decoration: none; font-weight: 600; font-size: 14px; padding: 8px 12px; border-radius: 6px; white-space: nowrap; }
+.btn.ghost { background: transparent; color: var(--accent); border: 1px solid var(--line); }
+details summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+details p { margin: 6px 0 0; font-size: 13px; color: var(--muted); max-width: 60ch; }
+.empty { padding: 28px 16px; color: var(--muted); text-align: center; }
+.prose { padding: 4px 20px 16px; max-width: 75ch; }
+.prose h2 { font-family: var(--font-display); font-size: 18px; margin: 18px 0 6px; }
+.prose li { margin: 4px 0; }
+.rejected { margin: 0; padding: 12px 20px 16px 36px; font-size: 13px; color: var(--muted); columns: 2; column-gap: 32px; }
+footer { color: var(--muted); font-size: 13px; }
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; }
+  .best { border-left: 0; padding-left: 0; border-top: 1px solid var(--line); padding-top: 16px; }
+  h1 { font-size: 23px; }
+  thead { display: none; }
+  table, tbody, tr, td { display: block; width: 100%; }
+  tr { border-bottom: 1px solid var(--line); padding: 12px 0; }
+  td { border: 0; padding: 4px 16px; }
+  td.r { text-align: left; }
+  td[data-k]::before { content: attr(data-k) ": "; color: var(--muted); font-size: 13px; }
+  .rejected { columns: 1; }
+}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="wrap">
+  <div class="brand"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="4"/><path d="M12 8v8M8 12h8"/></svg>Warmtepompradar</div>
+  <div class="crumbs"><a href="../">Prijsradar</a> › Hybride warmtepompen</div>
+</div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Hybride warmtepompen · ISDE <span id="year">2026</span></div>
+      <h1>Wat kost een hybride warmtepomp na subsidie, en past hij op je <span id="boiler">Intergas Xtreme CW5</span>?</h1>
+      <p class="lede">De spider zoekt webshops af naar hybride warmtepompen, zoekt bij elk model het ISDE-bedrag op in de RVO-meldcodelijst en trekt dat van de prijs af. Netto onder € 0 betekent: de subsidie is hoger dan de prijs van het apparaat.</p>
+      <div class="kpis" id="kpis"></div>
+    </div>
+    <div class="best" id="best">
+      <div class="label">Laagste netto prijs (bij je filters)</div>
+      <div class="price" id="best-net">–</div>
+      <div class="what" id="best-what">Nog geen metingen</div>
+      <div><a class="btn" id="best-link" href="#" target="_blank" rel="noopener" hidden>Naar winkel</a></div>
+    </div>
+  </section>
+
+  <div class="notice" id="deadline"></div>
+
+  <nav class="tabs" aria-label="Weergave">
+    <a href="#lijst" data-tab="lijst">Warmtepompen <span class="count" id="tab-count">0</span></a>
+    <a href="#merken" data-tab="merken">Merken &amp; ketel</a>
+    <a href="#uitleg" data-tab="uitleg">Uitleg</a>
+  </nav>
+
+  <section id="view-lijst" class="panel">
+    <div class="filters">
+      <label><input type="checkbox" id="f-neg" checked> Alleen netto onder € <span id="lim">0</span></label>
+      <label>Past op de ketel:
+        <select id="f-fit">
+          <option value="ja">Bevestigd</option>
+          <option value="opentherm" selected>Bevestigd + OpenTherm</option>
+          <option value="controleren">Ook ‘controleren’</option>
+          <option value="alles">Alles</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="f-inst"> Installatie meerekenen € <input type="number" id="f-inst-eur" min="0" step="100" value="1500" aria-label="Geschatte installatiekosten"></label>
+      <label><input type="checkbox" id="f-stock"> Alleen op voorraad</label>
+      <label><input type="checkbox" id="f-est" checked> Ook geschatte subsidie</label>
+      <span class="spacer"></span>
+      <label>Sorteer
+        <select id="f-sort"><option value="net">Netto prijs</option><option value="price">Prijs</option><option value="brand">Merk</option></select>
+      </label>
+    </div>
+    <table>
+      <thead><tr><th>Model</th><th class="r">Prijs</th><th class="r">Subsidie</th><th class="r">Netto</th><th>Past op ketel?</th><th></th></tr></thead>
+      <tbody id="rows"><tr><td colspan="6" class="empty">Laden…</td></tr></tbody>
+    </table>
+  </section>
+
+  <section id="view-merken" class="panel" hidden>
+    <table>
+      <thead><tr><th>Merk / serie</th><th>Past op ketel?</th><th>Waarom</th></tr></thead>
+      <tbody id="brands"></tbody>
+    </table>
+  </section>
+
+  <section id="view-uitleg" class="panel" hidden>
+    <div class="prose">
+      <h2>Hoe de spider rekent</h2>
+      <ul>
+        <li><b>Prijs</b>: de prijs in de webshop, inclusief btw, zoals die in de productgegevens van de pagina staat.</li>
+        <li><b>Subsidie</b>: het ISDE-bedrag voor een eerste warmtepomp uit de RVO-meldcodelijst. Staat de meldcode op de productpagina, dan telt die. Anders zoekt de spider het model op naam in de lijst. Lukt dat niet, dan is het een <span class="pill est">schatting</span>: startbedrag plus bedrag per kW, met 1 kW marge omdat RVO meestal minder subsidiabel vermogen rekent dan op de doos staat.</li>
+        <li><b>Netto</b>: prijs min subsidie. Met ‘installatie meerekenen’ komt je eigen schatting erbij, behalve bij winkels die al inclusief installatie verkopen.</li>
+      </ul>
+      <h2>Waar je op moet letten</h2>
+      <ul>
+        <li>Voor ISDE moet een installateur de warmtepomp plaatsen; zelf installeren telt niet. Een netto prijs onder € 0 voor het apparaat betekent dus niet dat het hele project gratis is.</li>
+        <li>Subsidiebedragen op de RVO-meldcodepagina's zijn indicatief. Het definitieve bedrag hangt af van je aanvraag.</li>
+        <li>Een tweede of volgende lucht-waterwarmtepomp krijgt in 2026 een lager bedrag (geen startbedrag).</li>
+        <li>‘Past op ketel’ komt van fabrikanten en andere bronnen (zie Merken &amp; ketel). Laat de installateur de combinatie met jouw Xtreme altijd bevestigen.</li>
+      </ul>
+    </div>
+    <h2 class="prose" style="margin:0;padding-bottom:0;font-family:var(--font-display);font-size:18px">Overgeslagen producten bij de laatste run</h2>
+    <ul class="rejected" id="rejected"></ul>
+  </section>
+
+  <footer id="footer"></footer>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const eur0 = new Intl.NumberFormat("nl-NL", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+  const dlong = new Intl.DateTimeFormat("nl-NL", { day: "numeric", month: "long", year: "numeric" });
+  const FIT = { ja: "Bevestigd", opentherm: "Via OpenTherm", controleren: "Controleren", onbekend: "Onbekend", nee: "Past niet" };
+  const FIT_RANK = { ja: 0, opentherm: 1, controleren: 2, onbekend: 3, nee: 4 };
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const store = {
+    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
+    set(k, v) { try { localStorage.setItem(k, v); } catch {} },
+  };
+  let data = null;
+
+  function current() {
+    // Alleen producten die bij de laatste run nog gevonden zijn.
+    const last = Object.values(data.products).reduce((m, p) => (p.last_seen > m ? p.last_seen : m), "");
+    return Object.entries(data.products).map(([id, p]) => ({ id, ...p })).filter((p) => p.last_seen === last);
+  }
+
+  function filtered() {
+    const lim = Number(data.settings?.net_below ?? 0);
+    const fit = $("f-fit").value, inst = $("f-inst").checked, instEur = Number($("f-inst-eur").value) || 0;
+    const maxRank = fit === "alles" ? 9 : FIT_RANK[fit];
+    let rows = current().map((p) => ({
+      ...p,
+      est: (p.subsidy_source || "").startsWith("schatting"),
+      total: p.net == null ? null : p.net + (inst && !p.incl_install ? instEur : 0),
+    }))
+      .filter((p) => (FIT_RANK[p.fit] ?? 3) <= maxRank)
+      .filter((p) => !$("f-stock").checked || p.available !== false)
+      .filter((p) => $("f-est").checked || !p.est);
+    const all = rows;
+    if ($("f-neg").checked) rows = rows.filter((p) => p.total != null && p.total < lim);
+    const s = $("f-sort").value;
+    const cmp = s === "price" ? (a, b) => a.price - b.price
+      : s === "brand" ? (a, b) => a.brand.localeCompare(b.brand, "nl") || a.price - b.price
+      : (a, b) => (a.total ?? 1e9) - (b.total ?? 1e9);
+    rows.sort(cmp); all.sort((a, b) => (a.total ?? 1e9) - (b.total ?? 1e9));
+    return { rows, all, lim };
+  }
+
+  function row(p) {
+    const tr = document.createElement("tr");
+    const subs = p.subsidy == null ? "?" : eur0.format(p.subsidy);
+    const subsNote = p.meldcode
+      ? `<a href="${esc(p.rvo_url || "#")}" target="_blank" rel="noopener">${esc(p.meldcode)}</a>${p.subsidy_year && p.subsidy_year !== data.subsidy_year ? ` · bedrag ${esc(p.subsidy_year)}` : ""}`
+      : `<span class="pill est">${p.subsidy == null ? "onbekend" : "schatting"}</span>`;
+    tr.innerHTML = `
+      <td><div class="model">${esc(p.name)}</div>
+        <div class="sub">${esc(p.shop_name)}${p.kw ? ` · ${p.kw} kW` : ""}${p.incl_install ? " · incl. installatie" : ""}${p.available === false ? " · niet op voorraad" : ""}</div>
+        <details><summary>Waarom deze beoordeling?</summary><p>${esc(p.fit_why)}${p.fit_source ? ` <a href="${esc(p.fit_source)}" target="_blank" rel="noopener">Bron</a>` : ""}</p>
+        <p>Subsidie: ${esc(p.subsidy_source)}${p.rvo_title ? ` (${esc(p.rvo_title)})` : ""}.</p></details></td>
+      <td class="r money" data-k="Prijs">${eur0.format(p.price)}</td>
+      <td class="r" data-k="Subsidie"><div class="money">− ${subs}</div><div class="sub">${subsNote}</div></td>
+      <td class="r" data-k="Netto"><span class="net ${p.total != null && p.total < 0 ? "neg" : ""}">${p.total == null ? "?" : eur0.format(p.total)}</span></td>
+      <td data-k="Past op ketel"><span class="pill ${esc(p.fit)}">${FIT[p.fit] || esc(p.fit)}</span></td>
+      <td class="r"><a class="btn ghost" href="${esc(p.url)}" target="_blank" rel="noopener">Naar winkel</a></td>`;
+    return tr;
+  }
+
+  function render() {
+    const { rows, all, lim } = filtered();
+    $("lim").textContent = lim;
+    $("tab-count").textContent = rows.length;
+    const tb = $("rows"); tb.textContent = "";
+    if (!rows.length) {
+      const near = all.slice(0, 5);
+      tb.innerHTML = `<tr><td colspan="6" class="empty">Geen enkele hybride warmtepomp komt bij deze filters onder ${eur0.format(lim)} uit.${near.length ? " Dit zijn de vijf die het dichtst in de buurt komen:" : ""}</td></tr>`;
+      near.forEach((p) => tb.appendChild(row(p)));
+    } else rows.forEach((p) => tb.appendChild(row(p)));
+
+    const best = (rows.length ? rows : all).slice().sort((a, b) => (a.total ?? 1e9) - (b.total ?? 1e9))[0];
+    if (best && best.total != null) {
+      $("best-net").textContent = eur0.format(best.total);
+      $("best-net").className = "price" + (best.total < 0 ? " neg" : "");
+      $("best-what").innerHTML = `<b>${esc(best.name)}</b><br><span class="sub">bij ${esc(best.shop_name)} · ${eur0.format(best.price)} − ${eur0.format(best.subsidy)} subsidie</span>`;
+      $("best-link").href = best.url; $("best-link").hidden = false;
+    }
+  }
+
+  function renderStatic() {
+    const cur = current();
+    const shops = new Set(cur.map((p) => p.shop));
+    const neg = cur.filter((p) => p.net != null && p.net < 0);
+    const negFit = neg.filter((p) => FIT_RANK[p.fit] <= 1);
+    $("year").textContent = data.subsidy_year;
+    $("boiler").textContent = data.boiler?.name || "cv-ketel";
+    $("kpis").innerHTML = [
+      [cur.length, "hybrides gevonden"], [shops.size, "winkels"], [neg.length, "netto onder € 0"], [negFit.length, "daarvan passend op je ketel"],
+    ].map(([n, t]) => `<span><b>${n}</b> ${t}</span>`).join("");
+    if (store.get("wp-f-inst-eur") === null) $("f-inst-eur").value = data.settings?.install_estimate ?? 1500;
+
+    const y = Number(data.subsidy_year);
+    $("deadline").innerHTML = y <= 2026
+      ? `<b>Let op, 2027:</b> RVO wil het bedrag per kW voor lucht-waterwarmtepompen in 2027 verlagen van € 225 naar € 120 (voorgenomen). Koop je uiterlijk 31 december 2026 en laat je in 2027 installeren, dan geldt een overgangsregeling met het bedrag van 2026. <a href="https://www.rvo.nl/subsidies-financiering/isde/isde-wat-wijzigt-er-2027" target="_blank" rel="noopener">RVO: wat wijzigt er in 2027</a>`
+      : `Subsidiebedragen voor ${y}. Controleer bij twijfel de meldcode op <a href="https://www.rvo.nl/subsidies-financiering/isde/meldcodelijsten/warmtepompen" target="_blank" rel="noopener">rvo.nl</a>.`;
+
+    $("brands").innerHTML = (data.brands || []).slice().sort((a, b) => FIT_RANK[a.fit] - FIT_RANK[b.fit])
+      .map((b) => `<tr><td><div class="model">${esc(b.brand)}</div><div class="sub">${esc(b.series)}</div></td>
+        <td><span class="pill ${esc(b.fit)}">${FIT[b.fit] || esc(b.fit)}</span></td>
+        <td class="sub">${esc(b.why)}${b.source ? ` <a href="${esc(b.source)}" target="_blank" rel="noopener">Bron</a>` : ""}</td></tr>`).join("");
+    $("rejected").innerHTML = (data.rejected || []).map((r) => `<li>${esc(r)}</li>`).join("") || "<li>Niets overgeslagen.</li>";
+    const upd = data.updated ? dlong.format(new Date(data.updated)) : "onbekend";
+    $("footer").textContent = `Laatste run ${upd}. Prijzen inclusief btw, zoals de webshop ze in de productgegevens zet; ze kunnen afwijken van de actuele prijs. Subsidiebedragen zijn indicatief (RVO-meldcodelijst).`;
+  }
+
+  function showTab() {
+    const tab = ["lijst", "merken", "uitleg"].includes(location.hash.slice(1)) ? location.hash.slice(1) : "lijst";
+    for (const a of document.querySelectorAll(".tabs a")) {
+      if (a.dataset.tab === tab) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+    }
+    for (const t of ["lijst", "merken", "uitleg"]) $("view-" + t).hidden = t !== tab;
+  }
+
+  for (const id of ["f-neg", "f-fit", "f-inst", "f-inst-eur", "f-stock", "f-est", "f-sort"]) {
+    const el = $(id);
+    const saved = store.get("wp-" + id);
+    if (saved !== null) { if (el.type === "checkbox") el.checked = saved === "1"; else el.value = saved; }
+    el.addEventListener("input", () => {
+      store.set("wp-" + id, el.type === "checkbox" ? (el.checked ? "1" : "0") : el.value);
+      if (data) render();
+    });
+  }
+  window.addEventListener("hashchange", showTab);
+  showTab();
+
+  fetch("data.json", { cache: "no-store" })
+    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then((json) => { data = json; renderStatic(); render(); })
+    .catch(() => { $("rows").innerHTML = '<tr><td colspan="6" class="empty">data.json kon niet worden geladen. Draai de spider of open de pagina via een webserver.</td></tr>'; });
+})();
+</script>
+</body>
+</html>

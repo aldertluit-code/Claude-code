@@ -1,0 +1,315 @@
+{
+  "boiler": {
+    "name": "Intergas Xtreme CW5",
+    "protocol": "OpenTherm",
+    "note": "Modulerende HR-combiketel met OpenTherm. Intergas noemt de Xtreme 'hybrid ready'."
+  },
+  "settings": {
+    "subsidy_year": null,
+    "net_below": 0,
+    "install_estimate": 1500,
+    "min_price": 700,
+    "max_pages_per_shop": 80,
+    "rvo_refresh_days": 7,
+    "rvo_detail_refresh_days": 14,
+    "rvo_max_detail_fetches": 250,
+    "subsidy_estimate": {
+      "start": 1025,
+      "per_kw": 225,
+      "kw_margin": 1,
+      "min": 500
+    }
+  },
+  "rvo": {
+    "list_pages": [
+      "https://www.rvo.nl/subsidies-financiering/isde/meldcodelijsten/warmtepompen",
+      "https://www.rvo.nl/subsidies-financiering/isde/meldcodelijsten"
+    ],
+    "detail_prefix": "https://www.rvo.nl/meldcodes-warmtepompen/"
+  },
+  "hybrid_words": [
+    "hybride",
+    "hybrid",
+    "add-on",
+    "addon",
+    "add on"
+  ],
+  "product_words": [
+    "warmtepomp",
+    "heat pump",
+    "heatpump",
+    "hybride",
+    "hybrid",
+    "buitenunit",
+    "monoblock"
+  ],
+  "exclude_words": [
+    "beugel",
+    "montageset",
+    "leidingset",
+    "koelleiding",
+    "wandconsole",
+    "muurconsole",
+    "vloerconsole",
+    "voetset",
+    "trillingsdemper",
+    "afdekkap",
+    "sensor",
+    "voeler",
+    "filter",
+    "kabel",
+    "adapter",
+    "onderhoud",
+    "service",
+    "garantie",
+    "verlengde",
+    "condensafvoer",
+    "vul",
+    "inhibitor",
+    "zonder buitenunit",
+    "losse binnenunit",
+    "alleen binnenunit",
+    "boiler",
+    "buffervat",
+    "expansievat",
+    "airco",
+    "split airco",
+    "zwembad"
+  ],
+  "install_words": [
+    "incl. installatie",
+    "inclusief installatie",
+    "incl installatie",
+    "met installatie",
+    "incl. montage",
+    "inclusief montage",
+    "incl montage",
+    "met montage",
+    "geinstalleerd",
+    "geïnstalleerd",
+    "all-in",
+    "standaard installatie"
+  ],
+  "shops": [
+    {
+      "id": "technim",
+      "name": "Technim",
+      "platform": "woocommerce",
+      "base": "https://www.technim.nl",
+      "queries": [
+        "hybride warmtepomp",
+        "hybride",
+        "hybrid",
+        "add-on"
+      ],
+      "start": [
+        "https://www.technim.nl/?s=hybride&post_type=product"
+      ]
+    },
+    {
+      "id": "warmtebeheer",
+      "name": "Warmtebeheer",
+      "platform": "html",
+      "base": "https://www.warmtebeheer.nl",
+      "start": [
+        "https://www.warmtebeheer.nl/catalogsearch/result/?q=hybride+warmtepomp",
+        "https://www.warmtebeheer.nl/catalogsearch/result/?q=hybrid"
+      ]
+    },
+    {
+      "id": "newheating",
+      "name": "New Heating",
+      "platform": "html",
+      "base": "https://www.new-heating.com",
+      "start": [
+        "https://new-heating.com/en/atlantic-aurea-hybrid-add-on-heat-pump-c-156692688.html",
+        "https://www.new-heating.com/en/advanced_search_result.php?keywords=hybrid",
+        "https://www.new-heating.com/en/advanced_search_result.php?keywords=hybride"
+      ]
+    },
+    {
+      "id": "heattransformers",
+      "name": "Heat Transformers",
+      "platform": "html",
+      "base": "https://www.heattransformers.com",
+      "start": [
+        "https://www.heattransformers.com/warmtepompen"
+      ]
+    },
+    {
+      "id": "warmtethuis",
+      "name": "WarmteThuis",
+      "platform": "html",
+      "base": "https://www.warmtethuis.nl",
+      "includes_installation": true,
+      "start": [
+        "https://www.warmtethuis.nl/warmtepompen"
+      ]
+    },
+    {
+      "id": "coolblue",
+      "name": "Coolblue",
+      "platform": "html",
+      "base": "https://www.coolblue.nl",
+      "includes_installation": true,
+      "start": [
+        "https://www.coolblue.nl/warmtepompen/hybride-warmtepompen"
+      ]
+    },
+    {
+      "id": "installand",
+      "name": "Installand",
+      "platform": "html",
+      "base": "https://www.installand.nl",
+      "start": [
+        "https://www.installand.nl/catalogsearch/result/?q=hybride+warmtepomp"
+      ]
+    }
+  ],
+  "brands": [
+    {
+      "brand": "Intergas",
+      "series": "Xtend",
+      "match": "intergas.*xtend|xtend.*intergas|\\bxtend\\b",
+      "fit": "ja",
+      "why": "Zelfde merk. Intergas noemt de Xtend met een HRE, HReco of Xtreme 'het meest optimaal'; koppeling via OpenTherm.",
+      "source": "https://www.intergas-verwarming.nl/en/consumer/products/xtend/",
+      "always_hybrid": true
+    },
+    {
+      "brand": "Atlantic",
+      "series": "Aurea Hybrid add-on",
+      "match": "aurea",
+      "fit": "ja",
+      "why": "Fabrikant: te koppelen aan alle modulerende en aan/uit-gestuurde cv-ketels; geen binnenunit of koelwerk nodig.",
+      "source": "https://www.technim.nl/wp-content/uploads/2025/02/4002080_928050_Atlantic_Installatiehandleiding_01.pdf",
+      "always_hybrid": true
+    },
+    {
+      "brand": "Remeha",
+      "series": "Elga Ace",
+      "match": "elga",
+      "fit": "opentherm",
+      "why": "Geldt als hybride die met ieder merk cv-ketel samenwerkt (OpenTherm). Niet specifiek voor de Xtreme bevestigd: laat de installateur checken.",
+      "source": "https://id.nl/energie-en-klimaat/klimaat-en-luchtkwaliteit/klimaatbeheersing/hybride-warmtepompen-de-cv-ketel-als-back-up",
+      "always_hybrid": true
+    },
+    {
+      "brand": "Quatt",
+      "series": "Hybrid",
+      "match": "quatt",
+      "fit": "opentherm",
+      "why": "Werkt samen met je bestaande cv-ketel; Quatt controleert bij de intake of jouw ketel past. Alleen verkrijgbaar inclusief installatie.",
+      "source": "https://media.quatt.io/Quatt%20V1%20Brochure.pdf",
+      "always_hybrid": true
+    },
+    {
+      "brand": "Weheat",
+      "series": "Blackbird",
+      "match": "weheat|blackbird",
+      "fit": "controleren",
+      "why": "Hybride naast een bestaande ketel. Welke ketels ondersteund worden heb ik niet kunnen bevestigen.",
+      "source": "https://www.weheat.nl/en/producten/blackbird",
+      "always_hybrid": true
+    },
+    {
+      "brand": "Alpha Innotec",
+      "series": "Hybrox",
+      "match": "hybrox|alpha.?innotec",
+      "fit": "controleren",
+      "why": "Hybride monoblock. Koppeling met een Intergas-ketel niet bevestigd.",
+      "source": null,
+      "always_hybrid": true
+    },
+    {
+      "brand": "ATAG",
+      "series": "Energion Hybrid",
+      "match": "\\batag\\b|energion",
+      "fit": "controleren",
+      "why": "Wordt meestal met een ATAG-ketel geleverd. Koppeling met een Intergas-ketel niet bevestigd.",
+      "source": null,
+      "always_hybrid": false
+    },
+    {
+      "brand": "Itho Daalderop",
+      "series": "Hybride",
+      "match": "itho|daalderop|amber|vincent",
+      "fit": "controleren",
+      "why": "Koppeling met een Intergas-ketel niet bevestigd.",
+      "source": null,
+      "always_hybrid": false
+    },
+    {
+      "brand": "Nefit Bosch",
+      "series": "Hybride",
+      "match": "nefit|bosch|enviline|compress",
+      "fit": "controleren",
+      "why": "Nefit Bosch claimt combineerbaarheid met hun eigen ketels; met een Intergas-ketel niet bevestigd.",
+      "source": null,
+      "always_hybrid": false
+    },
+    {
+      "brand": "Daikin",
+      "series": "Altherma Hybrid",
+      "match": "daikin|altherma",
+      "fit": "controleren",
+      "why": "Daikin levert de hybride vaak als set met eigen gasmodule. Koppeling met een losse Xtreme niet bevestigd.",
+      "source": null,
+      "always_hybrid": false
+    },
+    {
+      "brand": "Vaillant",
+      "series": "aroTHERM Hybrid",
+      "match": "vaillant|arotherm",
+      "fit": "controleren",
+      "why": "Vaillant-regeling werkt met eigen ketels; koppeling met een Intergas-ketel niet bevestigd.",
+      "source": null,
+      "always_hybrid": false
+    },
+    {
+      "brand": "DeWarmte",
+      "series": "Hybride",
+      "match": "dewarmte|de warmte",
+      "fit": "controleren",
+      "why": "Koppeling met een Intergas-ketel niet bevestigd.",
+      "source": null,
+      "always_hybrid": false
+    },
+    {
+      "brand": "Panasonic",
+      "series": "Aquarea",
+      "match": "panasonic|aquarea",
+      "fit": "controleren",
+      "why": "Vooral all-electric; alleen meegeteld als de winkel hem als hybride verkoopt.",
+      "source": null,
+      "always_hybrid": false
+    },
+    {
+      "brand": "Mitsubishi",
+      "series": "Ecodan",
+      "match": "mitsubishi|ecodan",
+      "fit": "controleren",
+      "why": "Vooral all-electric; alleen meegeteld als de winkel hem als hybride verkoopt.",
+      "source": null,
+      "always_hybrid": false
+    },
+    {
+      "brand": "LG",
+      "series": "Therma V",
+      "match": "\\blg\\b|therma v",
+      "fit": "controleren",
+      "why": "Vooral all-electric; alleen meegeteld als de winkel hem als hybride verkoopt.",
+      "source": null,
+      "always_hybrid": false
+    },
+    {
+      "brand": "Inventum",
+      "series": "Hybride",
+      "match": "inventum",
+      "fit": "controleren",
+      "why": "Koppeling met een Intergas-ketel niet bevestigd.",
+      "source": null,
+      "always_hybrid": false
+    }
+  ]
+}

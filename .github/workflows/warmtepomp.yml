@@ -1,0 +1,65 @@
+name: Warmtepompradar spider
+
+on:
+  schedule:
+    - cron: "41 4 * * *"   # dagelijks rond 05:41 NL-tijd
+  push:
+    branches: [ccr-708d9799-6bfogl]
+    paths: ["warmtepomp/**", ".github/workflows/warmtepomp.yml"]
+  workflow_dispatch:
+    inputs:
+      dump_url:
+        description: "URL om te debuggen (leeg = normale run)"
+        required: false
+        default: ""
+      only_shop:
+        description: "Alleen deze winkel-id (leeg = alle)"
+        required: false
+        default: ""
+      test_alert:
+        description: "Stuur een testmelding van de deal-alert"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: commit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Debug één pagina
+        if: ${{ inputs.dump_url }}
+        env:
+          URL: ${{ inputs.dump_url }}
+        run: python3 warmtepomp/spider.py --dump "$URL"
+      - name: Warmtepompen zoeken
+        if: ${{ !inputs.dump_url }}
+        env:
+          ONLY: ${{ inputs.only_shop }}
+        run: python3 warmtepomp/spider.py ${ONLY:+--only "$ONLY"}
+        continue-on-error: true
+      - name: Wijzigingen committen
+        if: ${{ !inputs.dump_url }}
+        run: |
+          git config user.name "warmtepompradar-bot"
+          git config user.email "warmtepompradar-bot@users.noreply.github.com"
+          git add docs/warmtepomp/
+          git diff --cached --quiet && exit 0
+          git commit -m "Warmtepompen bijgewerkt $(date -u +%F)"
+          for i in 1 2 3; do git pull --rebase && git push && break; sleep 5; done
+      - name: Deal-alert
+        if: ${{ !inputs.dump_url && github.event_name != 'push' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 warmtepomp/alert.py ${{ inputs.test_alert && '--test' || '' }}
